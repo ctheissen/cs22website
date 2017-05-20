@@ -20,11 +20,19 @@ The output will be written to the /html folder that can be removed later.
 '''
 from __future__ import print_function
 
+import argparse
 from glob import glob
 import os
 import shutil
 
 from jinja2 import Environment, FileSystemLoader
+
+
+parser = argparse.ArgumentParser(description='Generate webpages for CS20. We want to generate statics pages for simplicity, but might read in some database (e.g. the database of abstracts) when doing so.')
+parser.add_argument('outpath',
+                    help='base directory for output')
+
+args = parser.parse_args()
 
 # Generate html
 env = Environment(loader=FileSystemLoader('.'))
@@ -35,20 +43,18 @@ The navigation bar is defined in templates/basic.html
 and I need to sync that with the content of the src directory by hand
 '''
 
-outpath = 'html'
-
-if not os.path.exists(outpath):
-    os.makedirs(outpath)
+if not os.path.exists(args.outpath):
+    os.makedirs(args.outpath)
 
 for page in pagelist:
     print("Working on {0}".format(page))
     template = env.get_template(page)
-    with open(os.path.join(outpath, os.path.basename(page)), "w") as html_out:
+    with open(os.path.join(args.outpath, os.path.basename(page)), "w") as html_out:
         html_out.write(template.render().encode('utf-8'))
 
 # copy several directories verbatim
-for d in ['css', 'fonts', 'images', 'js', 'icons']:
-    outdir = os.path.join(outpath, d)
+for d in ['css', 'fonts', 'images', 'js', 'icons', 'maps']:
+    outdir = os.path.join(args.outpath, d)
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
@@ -56,4 +62,4 @@ for d in ['css', 'fonts', 'images', 'js', 'icons']:
     for f in filelist:
         shutil.copy(f, outdir)
 
-print("Done. Website is in directory: {}.".format(outpath))
+print("Done. Website is in directory: {}.".format(args.outpath))
