@@ -41,20 +41,17 @@
        <h2><span>SOC</span></h2>
        <div class="c12 row">
 	 <ul class="listing">
-	   <li>Scott Wolk (chair) - CfA</li>
-	   <li>and many other people ...</li>
+	   {% for m in soc %}
+	   <li>{{m['Full Name']}} - {{m['Institute']}}</li>
+	   {% endfor %}
 	 </ul>
        </div> 
        <h2><span>LOC</span></h2>
        <div class="c12 row">
 	 <ul class="listing">
-	   <li>Moritz G&uuml;nther (chair) - MIT</li>
-	   <li>Nishu Karna - CfA</li>
-	   <li>David A Principe - MIT</li>
-	   <li>Sam Quinn - CfA</li>
-	   <li>Julie Skinner - Boston University</li>
-	   <li>Mark Veyette - Boston University</li>
-	   <li>Jen Winters - CfA</li>
+	   {% for m in loc %}
+	   <li>{{m['name']}} - {{m['inst']}}</li>
+	   {% endfor %}
 	 </ul>
        </div>
        <h2><span>Sponsoring Institutions</span></h2>

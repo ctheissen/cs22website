@@ -1,6 +1,8 @@
-# Output products
-html/*
 # MAC OS preview files
 .DS_Store
 # Editor backup
 *~
+
+# Python temp file
+*.pyc
+*__pycache__*

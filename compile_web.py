@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 '''Compile professional homepage
 
-This script compiles my professional homepage.
+This script compiles the CS20 homepage.
 It uses Jinja2 templates. There is a general template in /templates
-The individual files are made with template inheritance in the /src directory.
-So far, no actual python code is required to fill values in the templates.
+The individual files are made with template inheritance in the /pagesrc directory.
+For each template in "pagesrc", the script looks for a python module of the
+same name in "pagepy" and calles it's "data" method.
+That method is expected to return a dictionary, which is then passed to the jinja2
+template to fill in values.
+Not all pages require input data, thus if no matching module is found, no data is passed to
+jinja.
+
 The navigation bar is defined in templates/basic.html and it is assumed that
 the number of files in /src matches what is defined in basic.html.
 
 This script needs to be executed in the exact directory where it is now,
-because it copies pdfs from posters and talks and the path to all those
-is given relative to the current directory.
+because it uses relative input paths.
 
-Call as:
-
-python homepage.py
-
-The output will be written to the /html folder that can be removed later.
 '''
 from __future__ import print_function
 
@@ -24,8 +24,9 @@ import argparse
 from glob import glob
 import os
 import shutil
+import importlib
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 parser = argparse.ArgumentParser(description='Generate webpages for CS20. We want to generate statics pages for simplicity, but might read in some database (e.g. the database of abstracts) when doing so.')
@@ -35,7 +36,8 @@ parser.add_argument('outpath',
 args = parser.parse_args()
 
 # Generate html
-env = Environment(loader=FileSystemLoader('.'))
+env = Environment(loader=FileSystemLoader(['.']),
+                  autoescape=select_autoescape(['html']))
 
 pagelist = glob('pagesrc/*html')
 ''' Not foolproof!
@@ -48,9 +50,15 @@ if not os.path.exists(args.outpath):
 
 for page in pagelist:
     print("Working on {0}".format(page))
+    try:
+        datareader = importlib.import_module('pagepy.' + os.path.basename(page)[:-5])
+        data = datareader.data()
+    except ImportError:
+        data = {}
     template = env.get_template(page)
     with open(os.path.join(args.outpath, os.path.basename(page)), "w") as html_out:
-        html_out.write(template.render().encode('utf-8'))
+        html_out.write(template.render(**data))
+
 
 # copy several directories verbatim
 for d in ['css', 'fonts', 'images', 'js', 'icons', 'maps']:
