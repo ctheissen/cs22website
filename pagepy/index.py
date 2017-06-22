@@ -1,3 +1,4 @@
+from glob import glob
 import csv
 
 def data():
@@ -13,4 +14,7 @@ def data():
         if row['Status'] == 'Chair':
             row['Full Name'] = row['Full Name'] + ' (chair)'
 
-    return {'loc': loc, 'soc': soc}
+    images = glob('images/slide-*')
+    images.sort()
+
+    return {'loc': loc, 'soc': soc, 'images': images}
