@@ -65,6 +65,8 @@ ul.social li a.fb:hover{background-position: -50px -100px;}
 ul.social li a.gp:hover{background-position: -150px -100px;}
 ul.social li a.tw:hover{background-position: -250px -100px;}
 ul.social li a.in:hover{background-position: -350px -100px;}
+.top-bar {font-size:1.em;background-color:#DC932C;overflow:hidden;}
+.top-bar p,.top-bar a {color:white;line-height: 30px;}
 
 .navbar-wrapper {position: absolute;top: 30px;left: 0;right: 0;z-index: 20;}
 .navbar-wrapper .container {padding-left: 0;padding-right: 0;}
