@@ -68,16 +68,11 @@ for d in ['css', 'fonts', 'images', 'js', 'icons', 'maps']:
 
     filelist = glob(os.path.join(d, '*'))
     for f in filelist:
-        try:
-            shutil.copy(f, outdir)
-        except shutil.SameFileError:
-            pass
+        shutil.copy(f, outdir)
 
 # copy favicons which should live in root directory
 filelist = glob(os.path.join('favicon', '*'))
 for f in filelist:
-    try:
-        shutil.copy(f, args.outpath)
-    except shutil.SameFileError:
-        pass
+    shutil.copy(f, args.outpath)
+
 print("Done. Website is in directory: {}.".format(args.outpath))
