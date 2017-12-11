@@ -61,7 +61,7 @@ for page in pagelist:
 
 
 # copy several directories verbatim
-for d in ['css', 'fonts', 'images', 'js', 'icons', 'maps']:
+for d in ['css', 'fonts', 'images', 'js', 'icons', 'maps', 'docs']:
     outdir = os.path.join(args.outpath, d)
     if not os.path.exists(outdir):
         os.makedirs(outdir)
