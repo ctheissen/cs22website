@@ -1,0 +1,91 @@
+
+{% extends "templates/basic.html" %}
+{% set active_page = "Contributions" %}
+
+{% block content %}
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']],
+processEscapes: true}
+});
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+    <div class="container clearfix mt-100 mb-20">
+      {% include "templates/globalmessage.html" ignore missing %}
+      <a name="top"></a>
+      <h2><span>Abstracts</span></h2>
+      <div class="c12 row">
+        <p>Use the table below to view and search abstracts or jump directly
+	to a listing of all <a href="#talks">talks</a> or <a href="#posters">posters</a>.</p>
+
+	<a name="talks"></a>
+	<h2><span>Talks</span></h2>
+
+	{% for t in talks %}
+	<p class="rightlinks"><a href="#top">table</a>
+	  <a href="#talks">talks</a>
+	  <a href="#posters">posters</a>
+	</p>
+	<h3>
+	  {% if t['Link to electronic material'] %}
+	    <a href='{{ t['Link to electronic material'] }}'>
+	      {% endif %}
+	      {{ t['Title'] }}
+	    {% if t['Link to electronic material'] %}</a>{% endif %}
+	</h3>
+	<p>science theme: {{ t['Select a major science topic'] }}<br>
+	<em>schedule: {{ t['day']|default('TBA') }}, {{ t['time']|default('TBA') }}</em></p>
+	<p><strong>
+	    {% if t['Publish first author contact information?'] %}
+	    <a href='mailto:{{ t['Email Address'] }}'>
+	      {% endif %}
+	      {{ t['authorlist'][0] }}
+	      {% if t['Publish first author contact information?'] %}
+	    </a>
+	      {% endif %}
+	  </strong>
+	  {% for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}<br>
+	{% for a in t['affillist'] %}
+	  ({{ loop.index }}) {{ a }}{% if not loop.last %};{% endif %}
+	  {% endfor %}
+	</p>
+	<p>{{ t['Abstract'] }}</p>
+	    {% endfor %}
+
+	<a name="posters"></a>
+	<h2><span>Posters</span><h2>
+	    {% for t in posters %}
+	    <p class="rightlinks"><a href="#top">table</a>
+	  <a href="#talks">talks</a>
+	  <a href="#posters">posters</a>
+	</p>
+
+	    	<h3>
+	  {% if t['Link to electronic material'] %}
+	    <a href='{{ t['Link to electronic material'] }}'>
+	      {% endif %}
+	      {{ t['Title'] }}
+	    {% if t['Link to electronic material'] %}</a>{% endif %}
+	</h3>
+	<p> <em>poster number: {{ t['poster number']|default('TBA') }}</em><br>
+	<p><strong>
+	    {% if t['Publish first author contact information?'] %}
+	    <a href='mailto:{{ t['Email Address'] }}'>
+	      {% endif %}
+	      {{ t['authorlist'][0] }}
+	      {% if t['Publish first author contact information?'] %}
+	    </a>
+	    {% endif %}
+	  </strong>
+	  {% for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}<br>
+	{% for a in t['affillist'] %}
+	  ({{ loop.index }}) {{ a }}{% if not loop.last %};{% endif %}
+	  {% endfor %}
+	</p>
+	<p>{{ t['Abstract'] }}</p>
+	    {% endfor %}
+
+      </div>  
+    </div>
+
+{% endblock content %}
