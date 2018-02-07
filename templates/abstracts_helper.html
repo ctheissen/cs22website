@@ -1,0 +1,33 @@
+{% macro talktitle(t) -%}
+<p class="rightlinks"><a href="#top">table</a>
+  <a href="#talks">talks</a>
+  <a href="#posters">posters</a>
+</p>
+<a name="{{ t['Title'] }}"></a>
+<h3>
+  {% if t['Link to electronic material'] %}
+  <a href='{{ t['Link to electronic material'] }}'>
+    {% endif %}
+    {{ t['Title'] }}
+    {% if t['Link to electronic material'] %}</a>{% endif %}
+</h3>
+{%- endmacro %}
+
+{% macro authoraffilabstract(t) -%}
+<p><strong>
+    {% if t['Publish first author contact information?'] %}
+    <a href='mailto:{{ t['Email Address'] }}'>
+      {% endif %}
+      {{ t['authorlist'][0] }}
+      {% if t['Publish first author contact information?'] %}
+    </a>
+    {% endif %}
+  </strong>
+  {% for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}<br>
+  {% for a in t['affillist'] %}
+  ({{ loop.index }}) {{ a }}{% if not loop.last %};{% endif %}
+  {% endfor %}
+</p>
+<p>{{ t['Abstract'] }}</p>
+<a href="#{{ t['Title'] }}">asdf</a>
+{%- endmacro %}

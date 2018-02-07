@@ -1,5 +1,6 @@
 
 {% extends "templates/basic.html" %}
+{% import "templates/abstracts_helper.html" as abstracts %}
 {% set active_page = "Contributions" %}
 
 {% block content %}
@@ -22,68 +23,20 @@ processEscapes: true}
 	<h2><span>Talks</span></h2>
 
 	{% for t in talks %}
-	<p class="rightlinks"><a href="#top">table</a>
-	  <a href="#talks">talks</a>
-	  <a href="#posters">posters</a>
-	</p>
-	<h3>
-	  {% if t['Link to electronic material'] %}
-	    <a href='{{ t['Link to electronic material'] }}'>
-	      {% endif %}
-	      {{ t['Title'] }}
-	    {% if t['Link to electronic material'] %}</a>{% endif %}
-	</h3>
-	<p>science theme: {{ t['Select a major science topic'] }}<br>
+	{{ abstracts.talktitle(t) }}
+	<p class="locationschedule">science theme: {{ t['Select a major science topic'] }}<br>
 	<em>schedule: {{ t['day']|default('TBA') }}, {{ t['time']|default('TBA') }}</em></p>
-	<p><strong>
-	    {% if t['Publish first author contact information?'] %}
-	    <a href='mailto:{{ t['Email Address'] }}'>
-	      {% endif %}
-	      {{ t['authorlist'][0] }}
-	      {% if t['Publish first author contact information?'] %}
-	    </a>
-	      {% endif %}
-	  </strong>
-	  {% for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}<br>
-	{% for a in t['affillist'] %}
-	  ({{ loop.index }}) {{ a }}{% if not loop.last %};{% endif %}
-	  {% endfor %}
-	</p>
-	<p>{{ t['Abstract'] }}</p>
-	    {% endfor %}
+	{{ abstracts.authoraffilabstract(t) }}
+	{% endfor %}
 
 	<a name="posters"></a>
-	<h2><span>Posters</span><h2>
-	    {% for t in posters %}
-	    <p class="rightlinks"><a href="#top">table</a>
-	  <a href="#talks">talks</a>
-	  <a href="#posters">posters</a>
-	</p>
-
-	    	<h3>
-	  {% if t['Link to electronic material'] %}
-	    <a href='{{ t['Link to electronic material'] }}'>
-	      {% endif %}
-	      {{ t['Title'] }}
-	    {% if t['Link to electronic material'] %}</a>{% endif %}
-	</h3>
-	<p> <em>poster number: {{ t['poster number']|default('TBA') }}</em><br>
-	<p><strong>
-	    {% if t['Publish first author contact information?'] %}
-	    <a href='mailto:{{ t['Email Address'] }}'>
-	      {% endif %}
-	      {{ t['authorlist'][0] }}
-	      {% if t['Publish first author contact information?'] %}
-	    </a>
-	    {% endif %}
-	  </strong>
-	  {% for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}<br>
-	{% for a in t['affillist'] %}
-	  ({{ loop.index }}) {{ a }}{% if not loop.last %};{% endif %}
-	  {% endfor %}
-	</p>
-	<p>{{ t['Abstract'] }}</p>
-	    {% endfor %}
+	<h2><span>Posters</span></h2>
+	    
+	 {% for t in posters %}
+	{{ abstracts.talktitle(t) }}
+	<p class="locationschedule"> <em>poster number: {{ t['poster number']|default('TBA') }}</em></p>
+	{{ abstracts.authoraffilabstract(t) }}
+	{% endfor %}
 
       </div>  
     </div>
