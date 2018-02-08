@@ -69,6 +69,12 @@ for d in ['css', 'fonts', 'images', 'js', 'icons', 'maps', 'docs']:
     filelist = glob(os.path.join(d, '*'))
     for f in filelist:
         shutil.copy(f, outdir)
+# and in some cases, copy only handselected files
+outdir = os.path.join(args.outpath, 'data')
+if not os.path.exists(outdir):
+    os.makedirs(outdir)
+shutil.copy('data/abstracts.json', outdir)
+
 
 # copy favicons which should live in root directory
 filelist = glob(os.path.join('favicon', '*'))

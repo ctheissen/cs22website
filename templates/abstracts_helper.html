@@ -24,9 +24,7 @@
     {% endif %}
   </strong>
   {% for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}<br>
-  {% for a in t['affillist'] %}
-  ({{ loop.index }}) {{ a }}{% if not loop.last %};{% endif %}
-  {% endfor %}
+  {{ t['affiliations'] }}
 </p>
 <p>{{ t['Abstract'] }}</p>
 <a href="#{{ t['Title'] }}">asdf</a>

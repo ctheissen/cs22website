@@ -11,6 +11,10 @@ processEscapes: true}
 });
 </script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="js/abstractstab.js"></script>
+	
+
     <div class="container clearfix mt-100 mb-20">
       {% include "templates/globalmessage.html" ignore missing %}
       <a name="top"></a>
@@ -19,13 +23,38 @@ processEscapes: true}
         <p>Use the table below to view and search abstracts or jump directly
 	to a listing of all <a href="#talks">talks</a> or <a href="#posters">posters</a>.</p>
 
+<table id="example" class="display" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Type</th>
+                <th>Author</th>
+                <th>Title</th>
+		<th>Authorlist</th>
+		<th>Affiliations</th>
+		<th>Abstract</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th>Type</th>
+                <th>Author</th>
+                <th>Title</th>
+		<th>Authorlist</th>
+		<th>Affiliations</th>
+		<th>Abstract</th>
+             </tr>
+        </tfoot>
+    </table>
+	
 	<a name="talks"></a>
 	<h2><span>Talks</span></h2>
 
 	{% for t in talks %}
 	{{ abstracts.talktitle(t) }}
 	<p class="locationschedule">science theme: {{ t['Select a major science topic'] }}<br>
-	<em>schedule: {{ t['day']|default('TBA') }}, {{ t['time']|default('TBA') }}</em></p>
+	<em>schedule: {{ t['day']|default('TBA') }}, {{ t['time']|default('TBA') }} {% if t['type'] == 'invited' %} (invited) {% endif %}</em></p>
 	{{ abstracts.authoraffilabstract(t) }}
 	{% endfor %}
 

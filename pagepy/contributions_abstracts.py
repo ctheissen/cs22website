@@ -1,8 +1,9 @@
+import json
 from datetime import datetime
 import numpy as np
 from astropy.table import Table
 
-dates = {'': [2018, 7, 30],  # putput unassigned talks on first day to make
+dates = {'': [2018, 7, 30],  # output unassigned talks on first day to make
                              # sure they are not overlooked
          'TBA': [2018, 7, 30],
          'Sun': [2018, 7, 29],
@@ -47,12 +48,51 @@ def parse_day_time(day, timestr, end=False):
     d = dates[day]
     return datetime(d[0], d[1], d[2], int(time[0].strip()), int(time[1].strip()))
 
+contribtype = {'poster': 'poster',
+               'invited': 'invited review',
+               'contributed': 'contributed talk'}
+
+def combine_affils(affils):
+    return '; '.join(['({}) {}'.format(i + 1, a) for i, a in enumerate(affils)])
+
+def loctime(row):
+    if row['type'] == 'poster':
+        return 'poster number: {}'.format(row['poster number'])
+    elif (row['type'] == 'invited') or (row['type'] == 'contributed'):
+        return '{}, {}'.format(row['day'] if 'day' in row else 'TBA',
+                               row['time'] if 'time' in row else 'TBA')
+    else:
+        return ''
+
+# missing in list below: mark invited talks
+def write_json_abstracts(abstr):
+    # see encodeURIComponent - which is a js function that could encode
+    # non-standard characters on the js level
+    # since here it's just written to json.
+    # Or, could encode here, but I don't know the equivalent python function
+    data = {'data': []}
+    for row in abstr:
+        data['data'].append({'type': contribtype[row['type']],
+                             'author': row['authorlist'][0],
+                             'authorlist': row['Authors'],
+                             'affiliations': row['affiliations'],
+                             'abstract': row['Abstract'],
+                             'title': row['Title'],
+                             'authoremail': "<a href='mailto:{0}'>{0}</a>".format(row['Email Address']) if row['Publish first author contact information?'] else '--',
+                             'link': '<a href="{0}">{0}</a>'.format(row['Link to electronic material']) if row['Link to electronic material'] else '--',
+                             'loctime': loctime(row),
+                             })
+    with open('data/abstracts.json', 'w') as fp:
+        json.dump(data, fp)
+
+
 def data():
     # Fast reader does not deal well with some unicode
     abstr = Table.read('../data/abstracts.csv', fast_reader=False)
     abstr = abstr[~abstr['Timestamp'].mask]
     abstr['authorlist'] = [r.split(';') for r in abstr['Authors']]
-    abstr['affillist'] = [r.split(';') for r in abstr['Affiliations']]
+    abstr['affiliations'] = [r.split(';') for r in abstr['Affiliations']]
+    abstr['affiliations'] = [combine_affils(r) for r in abstr['affiliations']]
 
     ind_talk = (abstr['type'] == 'invited') | (abstr['type'] == 'contributed')
     ind_poster = abstr['type'] == 'poster'
@@ -89,5 +129,7 @@ def data():
         print('The following entries do not have a valid "type" entry, which would classify them as talk or poster:')
         for r in notype:
             print(r['Timestamp'], r['type'], r['Title'])
+
+    write_json_abstracts(abstr)
 
     return {'talks': talks, 'posters': posters}
