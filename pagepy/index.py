@@ -1,7 +1,7 @@
 from glob import glob
 import csv
 
-def data():
+def data(**kwargs):
     with open('data/LOCmembers.csv') as f:
         r = csv.DictReader(f)
         loc = [row for row in r]

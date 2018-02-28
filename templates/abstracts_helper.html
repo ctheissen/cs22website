@@ -27,5 +27,18 @@
   {{ t['affiliations'] }}
 </p>
 <p>{{ t['Abstract'] }}</p>
-<a href="#{{ t['Title'] }}">asdf</a>
+{%- endmacro %}
+
+{% macro single_abstract_any_type(t) -%}
+{{ talktitle(t) }}
+{% if ((t['type'] == 'invited') or (t['type'] == 'contributed')) %}
+    <p class="locationschedule">science theme: {{ t['Select a major science topic'] }}<br>
+      <em>schedule: {{ t['day']|default('TBA') }}, {{ t['time']|default('TBA') }} {% if t['type'] == 'invited' %} (invited) {% endif %}</em></p>
+{% elif t['type'] == 'poster' %}
+    <p class="locationschedule"> <em>poster number: {{ t['poster number']|default('TBA') }}</em></p>
+{% else %}
+<p class="locationschedule"> science theme: {{ t['Select a major science topic'] }}<br>
+  <em>scheduling information for {{ t['Type of contribution'] }} goes here</em></p>
+{% endif %}
+   {{ authoraffilabstract(t) }}
 {%- endmacro %}

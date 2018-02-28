@@ -86,42 +86,56 @@ def write_json_abstracts(abstr):
         json.dump(data, fp)
 
 
-def data():
-    # Fast reader does not deal well with some unicode
-    abstr = Table.read('../data/abstracts.csv', fast_reader=False)
-    abstr = abstr[~abstr['Timestamp'].mask]
-    abstr['authorlist'] = [r.split(';') for r in abstr['Authors']]
-    abstr['affiliations'] = [r.split(';') for r in abstr['Affiliations']]
-    abstr['affiliations'] = [combine_affils(r) for r in abstr['affiliations']]
+def process_google_form_value(tab):
+    '''Process the values collected in the Google abstract form
 
-    ind_talk = (abstr['type'] == 'invited') | (abstr['type'] == 'contributed')
-    ind_poster = abstr['type'] == 'poster'
+    Some of the form fields require some processing to get them into
+    the forms that are most useful in building the abstract booklet
+    and website, for example, the authorlist needs to be broken from a
+    single long string into t list of strings.
 
-    talks = abstr[ind_talk]
-    if ('day' in talks.colnames) and ('time' in talks.colnames):
-        talks['binary_time'] = [parse_day_time(r['day'][:3], r['time']) for r in talks]
-        talks.sort('binary_time')
-    else:
-        talks.sort('type')
-        talks.reverse()  # 'invited' is after 'contributed' alphabetically
+    This function add new colums to a table ``tab``.
+    '''
+    tab['authorlist'] = [r.split(';') for r in tab['Authors']]
+    tab['affiliations'] = [r.split(';') for r in tab['Affiliations']]
+    tab['affiliations'] = [combine_affils(r) for r in tab['affiliations']]
+    tab['binary_time'] = [parse_day_time(r['day'][:3], r['time']) for r in tab]
 
-    posters = abstr[ind_poster]
-    if 'poster number' not in posters.colnames:
+    if 'poster number' not in tab.colnames:
         posters['poster number'] = 'TBA'
-    posters.sort(['poster number', 'Authors'])
+
+    # Now some checks
+    ind_poster = tab['type'] == 'poster'
+
+    posters = tab[ind_poster]
     # check it's a number otherwise sort will fail because string sorting will
     # give different answers
     if not np.issubdtype(posters['poster number'].dtype, np.integer):
         print('Poster numbers are not integers - they might be sorted randomly.')
     # check that no two posters have the same number
     unique_numbers, unique_counts = np.unique(posters['poster number'],
-                                          return_counts=True)
+                                              return_counts=True)
     if (unique_counts > 1).sum() > 0:
         print('The following poster numbers are used more than once:')
         for i in (unique_counts > 1).nonzero()[0]:
             print('{}  is assigned to {} posters'.format(unique_numbers[i],
-                                                     unique_counts[1]))
+                                                         unique_counts[i]))
 
+
+
+def data(**kwargs):
+    # Fast reader does not deal well with some unicode
+    abstrfile = kwargs['abstracts'] if 'abstracts' in kwargs else '../data/abstracts.csv'
+    abstr = Table.read(abstrfile, fast_reader=False)
+    abstr = abstr[~abstr['Timestamp'].mask]
+    process_google_form_value(abstr)
+
+    ind_talk = (abstr['type'] == 'invited') | (abstr['type'] == 'contributed')
+    ind_poster = abstr['type'] == 'poster'
+
+    talks = abstr[ind_talk]
+    talks.sort(['binary_time', 'type', 'Select a major science topic'])
+    posters.sort(['poster number', 'Authors'])
 
     # List all entries that do not have a valid type
     notype = abstr[~ind_talk & ~ind_poster]

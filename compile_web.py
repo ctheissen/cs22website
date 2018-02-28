@@ -18,8 +18,6 @@ This script needs to be executed in the exact directory where it is now,
 because it uses relative input paths.
 
 '''
-from __future__ import print_function
-
 import argparse
 from glob import glob
 import os
@@ -32,6 +30,8 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 parser = argparse.ArgumentParser(description='Generate webpages for CS20. We want to generate statics pages for simplicity, but might read in some database (e.g. the database of abstracts) when doing so.')
 parser.add_argument('outpath',
                     help='base directory for output')
+parser.add_argument('-a', '--abstracts',
+                    help='csv file with abstracts')
 
 args = parser.parse_args()
 
@@ -52,7 +52,7 @@ for page in pagelist:
     print("Working on {0}".format(page))
     try:
         datareader = importlib.import_module('pagepy.' + os.path.basename(page)[:-5])
-        data = datareader.data()
+        data = datareader.data(**vars(args))
     except ImportError:
         data = {}
     template = env.get_template(page)

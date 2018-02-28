@@ -52,19 +52,14 @@ processEscapes: true}
 	<h2><span>Talks</span></h2>
 
 	{% for t in talks %}
-	{{ abstracts.talktitle(t) }}
-	<p class="locationschedule">science theme: {{ t['Select a major science topic'] }}<br>
-	<em>schedule: {{ t['day']|default('TBA') }}, {{ t['time']|default('TBA') }} {% if t['type'] == 'invited' %} (invited) {% endif %}</em></p>
-	{{ abstracts.authoraffilabstract(t) }}
+	{{ abstracts.single_abstract_any_type(t) }}
 	{% endfor %}
 
 	<a name="posters"></a>
 	<h2><span>Posters</span></h2>
 	    
 	 {% for t in posters %}
-	{{ abstracts.talktitle(t) }}
-	<p class="locationschedule"> <em>poster number: {{ t['poster number']|default('TBA') }}</em></p>
-	{{ abstracts.authoraffilabstract(t) }}
+	{{ abstracts.single_abstract_any_type(t) }}
 	{% endfor %}
 
       </div>  

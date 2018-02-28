@@ -1,0 +1,31 @@
+Dear {{dat['First author']}},
+
+we have processed your abstract into a pdf and an html file so that
+you can check that everything looks right. In particular, make sure
+any LaTeX symbols are shown as you intend.
+
+Note that links like "top of the page" do not work until your abstract
+is added to the full list on the Cool Stars website.
+
+If you want to change your contribution, you can simply edit it with
+the link in the initial confirmation email. We will send you another
+message like this after every change.  Although the link will continue
+to work, the SOC many not accept changes made after the deadline.
+
+Common reasons why your abstract might not format correctly:
+
+- The LaTeX system cannot process astronomy specific symbols. For
+  example, use $M_\odot$ instead of $M_\sun$.
+
+- Author and institution numbering: If you list more than one
+  institution please add numbers like "(1)" or "(1,3)" behind the
+  authorname, but do NOT number the institutions (they are numbered
+  automatically).
+
+If you need assistance or notive a problem with this message, please
+contact the Moritz Guenther, the chair of the LOC, at hgunther@mit.edu.
+
+Looking forward to see you at CS20!
+
+Yours,
+   Moritz
