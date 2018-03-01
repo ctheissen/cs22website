@@ -1,0 +1,31 @@
+{% import "abstracts_helper.tex" as abstracts %}
+\documentclass[11pt,twoside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\begin{document}
+\begin{titlepage}
+  \centering
+  \vspace{-3cm}
+  \includegraphics[width=.9\textwidth]{Logoround-04}
+  \par\vspace{-4cm}{\scshape\LARGE $20^{th}$ Cambridge Workshops of Cool Stars, Stellar Systems and the Sun \par}
+  \vspace{1cm}{\scshape\Large July 29 - Aug 3 2018, Boston / Cambridge, USA \par}
+  \vspace{1.5cm}
+  {\huge\bfseries Abstract booklet\par}
+  \vfill
+
+        % Bottom of the page
+  {\large Last updated: \today\par}
+\end{titlepage}
+
+\tableofcontents
+\chapter{Talks}
+        {% for t in talks %}
+          {{ abstracts.single_abstract_any_type(t) }}
+        {% endfor %}
+\chapter{Posters}
+        {% for t in posters %}
+          {{ abstracts.single_abstract_any_type(t) }}
+        {% endfor %}    
+\end{document}

@@ -1,5 +1,5 @@
 {% macro talktitle(t) -%}
-<p class="rightlinks"><a href="#top">table</a>
+<p class="rightlinks"><a href="#table">table</a>
   <a href="#talks">talks</a>
   <a href="#posters">posters</a>
 </p>
@@ -38,7 +38,7 @@
     <p class="locationschedule"> <em>poster number: {{ t['poster number']|default('TBA') }}</em></p>
 {% else %}
 <p class="locationschedule"> science theme: {{ t['Select a major science topic'] }}<br>
-  <em>scheduling information for {{ t['Type of contribution'] }} goes here</em></p>
+  <em>scheduling information or poster number goes here</em></p>
 {% endif %}
    {{ authoraffilabstract(t) }}
 {%- endmacro %}

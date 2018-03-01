@@ -1,0 +1,23 @@
+{% macro single_abstract_any_type(t) -%}
+  \section{ {{t['Title']}} }
+  \textbf{ {{ t['authorlist'][0] }} }{% for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}\\
+ 
+    {% if ((t['type'] == 'invited') or (t['type'] == 'contributed')) %}
+    science theme: {{ t['Select a major science topic'] }}\\
+    \emph{schedule: {{ t['day']|default('TBA') }}, {{ t['time']|default('TBA') }} {% if t['type'] == 'invited' %} (invited) {% endif %} }\\
+{% elif t['type'] == 'poster' %}
+    \emph{poster number: {{ t['poster number']|default('TBA') }} }\\
+{% else %}
+  science theme: {{ t['Select a major science topic'] }}\\
+  \emph{scheduling information or poster number goes here}
+       {% endif %}
+
+         {% if t['Publish first author contact information?'] %}
+           First author contact: \href{mailto: {{ t['Email Address'] }}}{{ '{' }}{{ t['Email Address'] }}}
+           {% endif %}
+
+    {% if t['Link to electronic material'] %}see also \url{ {{ t['Link to electronic material'] }} }{% endif %}
+\vspace{3 mm}
+      {{ t['Abstract'] }}
+        
+{%- endmacro %}

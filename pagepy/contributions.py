@@ -40,12 +40,15 @@ def parse_day_time(day, timestr, end=False):
     datetime : `datetime.datetime`
         Start time of event as `datetime.datetime` object.
     '''
+    if ((day is np.ma.masked) or (timestr is np.ma.masked) or (day is None)
+        or (timestr is None)):
+        return None
     i = 1 if end else 0
     if timestr in ['', 'TBA']:
         time = ['19', '00']
     else:
         time = timestr.split('-')[i].split(':')
-    d = dates[day]
+    d = dates[day[:3]]
     return datetime(d[0], d[1], d[2], int(time[0].strip()), int(time[1].strip()))
 
 contribtype = {'poster': 'poster',
@@ -97,9 +100,10 @@ def process_google_form_value(tab):
     This function add new colums to a table ``tab``.
     '''
     tab['authorlist'] = [r.split(';') for r in tab['Authors']]
+    tab['First author'] = [r[0].split('(')[0].strip() for r in tab['authorlist']]
     tab['affiliations'] = [r.split(';') for r in tab['Affiliations']]
     tab['affiliations'] = [combine_affils(r) for r in tab['affiliations']]
-    tab['binary_time'] = [parse_day_time(r['day'][:3], r['time']) for r in tab]
+    tab['binary_time'] = [parse_day_time(r['day'], r['time']) for r in tab]
 
     if 'poster number' not in tab.colnames:
         posters['poster number'] = 'TBA'
@@ -125,7 +129,7 @@ def process_google_form_value(tab):
 
 def data(**kwargs):
     # Fast reader does not deal well with some unicode
-    abstrfile = kwargs['abstracts'] if 'abstracts' in kwargs else '../data/abstracts.csv'
+    abstrfile = kwargs['abstracts']
     abstr = Table.read(abstrfile, fast_reader=False)
     abstr = abstr[~abstr['Timestamp'].mask]
     process_google_form_value(abstr)
@@ -135,6 +139,7 @@ def data(**kwargs):
 
     talks = abstr[ind_talk]
     talks.sort(['binary_time', 'type', 'Select a major science topic'])
+    posters = abstr[ind_poster]
     posters.sort(['poster number', 'Authors'])
 
     # List all entries that do not have a valid type

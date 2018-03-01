@@ -22,7 +22,7 @@ Common reasons why your abstract might not format correctly:
   authorname, but do NOT number the institutions (they are numbered
   automatically).
 
-If you need assistance or notive a problem with this message, please
+If you need assistance or notice a problem with this message, please
 contact the Moritz Guenther, the chair of the LOC, at hgunther@mit.edu.
 
 Looking forward to see you at CS20!
