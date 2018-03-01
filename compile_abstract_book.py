@@ -23,6 +23,8 @@ parser.add_argument('outpath',
 parser.add_argument('-a', '--abstracts',
                     default='../data/abstracts.csv',
                     help='csv file with abstracts')
+parser.add_argument('--output-unassigned', action='store_true',
+                    help='Output presentations that do not have a "type" entry in the table')
 
 args = parser.parse_args()
 

@@ -51,12 +51,16 @@ def parse_day_time(day, timestr, end=False):
     d = dates[day[:3]]
     return datetime(d[0], d[1], d[2], int(time[0].strip()), int(time[1].strip()))
 
-contribtype = {'poster': 'poster',
+contribtype = {'': 'not assigned',
+               'poster': 'poster',
                'invited': 'invited review',
                'contributed': 'contributed talk'}
 
 def combine_affils(affils):
-    return '; '.join(['({}) {}'.format(i + 1, a) for i, a in enumerate(affils)])
+    if len(affils) == 1:
+        return affils[0]
+    else:
+        return '; '.join(['({}) {}'.format(i + 1, a) for i, a in enumerate(affils)])
 
 def loctime(row):
     if row['type'] == 'poster':
@@ -110,7 +114,6 @@ def process_google_form_value(tab):
 
     # Now some checks
     ind_poster = tab['type'] == 'poster'
-
     posters = tab[ind_poster]
     # check it's a number otherwise sort will fail because string sorting will
     # give different answers
@@ -126,12 +129,11 @@ def process_google_form_value(tab):
                                                          unique_counts[i]))
 
 
-
 def data(**kwargs):
     # Fast reader does not deal well with some unicode
     abstrfile = kwargs['abstracts']
-    abstr = Table.read(abstrfile, fast_reader=False)
-    abstr = abstr[~abstr['Timestamp'].mask]
+    abstr = Table.read(abstrfile, fast_reader=False, fill_values=())
+    abstr = abstr[abstr['Timestamp'] != '']
     process_google_form_value(abstr)
 
     ind_talk = (abstr['type'] == 'invited') | (abstr['type'] == 'contributed')
@@ -144,6 +146,7 @@ def data(**kwargs):
 
     # List all entries that do not have a valid type
     notype = abstr[~ind_talk & ~ind_poster]
+
     if len(notype) > 0:
         print('The following entries do not have a valid "type" entry, which would classify them as talk or poster:')
         for r in notype:
@@ -151,4 +154,6 @@ def data(**kwargs):
 
     write_json_abstracts(abstr)
 
-    return {'talks': talks, 'posters': posters}
+    unass = notype if kwargs['output_unassigned'] else []
+
+    return {'talks': talks, 'posters': posters, 'unassigned': unass}
