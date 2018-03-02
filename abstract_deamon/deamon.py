@@ -88,6 +88,8 @@ def send_conf_email(dat):
             s.starttls()
             s.login(msg['From'], password)
             s.send_message(msg)
+        print('{}: Send email to: {}'.format(datetime.now().strftime('%m/%d/%Y %H:%M:%S'),
+                                             msg['To']))
 
 
 env = Environment(loader=FileSystemLoader(['../templates']),
