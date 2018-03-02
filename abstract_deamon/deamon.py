@@ -82,13 +82,12 @@ def send_conf_email(dat):
                        filename='abstract.pdf',
                        maintype='application', subtype='pdf')
 
-    if dat['Abstract'][0][:8] == 'TESTTEST':
-        with smtplib.SMTP('smtp.gmail.com', 587) as s:
-            s.ehlo()
-            s.starttls()
-            s.login(msg['From'], password)
-            s.send_message(msg)
-        print('{}: Send email to: {}'.format(datetime.now().strftime('%m/%d/%Y %H:%M:%S'),
+    with smtplib.SMTP('smtp.gmail.com', 587) as s:
+        s.ehlo()
+        s.starttls()
+        s.login(msg['From'], password)
+        s.send_message(msg)
+    print('{}: Send email to: {}'.format(datetime.now().strftime('%m/%d/%Y %H:%M:%S'),
                                              msg['To']))
 
 
