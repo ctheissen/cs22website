@@ -62,7 +62,7 @@ def send_conf_email(dat):
     with open('../../gmail.txt') as f:
         password = f.read()
     password = password[:-1]
-    process_google_form_value(dat)
+    process_google_form_value(dat, autoacceptposters=True)
 
     # Create the container email message.
     msg = EmailMessage()
