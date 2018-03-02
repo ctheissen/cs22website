@@ -18,7 +18,6 @@ This script needs to be executed in the exact directory where it is now,
 because it uses relative input paths.
 
 '''
-import argparse
 from glob import glob
 import os
 import shutil
@@ -26,12 +25,8 @@ import importlib
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from script_helper import parser
 
-parser = argparse.ArgumentParser(description='Generate webpages for CS20. We want to generate statics pages for simplicity, but might read in some database (e.g. the database of abstracts) when doing so.')
-parser.add_argument('outpath',
-                    help='base directory for output')
-parser.add_argument('-a', '--abstracts',
-                    help='csv file with abstracts')
 
 args = parser.parse_args()
 

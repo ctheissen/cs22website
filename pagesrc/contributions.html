@@ -19,7 +19,7 @@ processEscapes: true}
       {% include "templates/globalmessage.html" ignore missing %}
       <a name="top"></a>
       <div class="c12 row">
-	<p>Jump to <a href="#table">table of accepted ontributions</a>,
+	<p>Jump to <a href="#table">table of accepted all contributions</a>,
 	  <a href="#talks">accepted talks</a>, or 
 	  <a href="#posters">accepted posters</a>.
 	</p>
@@ -76,7 +76,7 @@ processEscapes: true}
       <a name="talks"></a>
       <h2><span>Talks</span></h2>
       <div class="c12 row">
-	{% if length(talks) == 0 %}
+	{% if talks|count == 0 %}
 	<p>Contributed talks will be listed here after the SOC has reviewed the submitted abstracts.</p>
 	{% else %}
         {% for t in talks %}
@@ -88,7 +88,7 @@ processEscapes: true}
       <a name="posters"></a>
       <h2><span>Posters</span></h2>
       <div class="c12 row">
-	{% if length(posters) == 0 %}
+	{% if posters|count == 0 %}
 	<p>Contributed talks will be listed here after the SOC has reviewed the submitted abstracts.</p>
 	{% else %}
         {% for t in posters %}
@@ -97,6 +97,18 @@ processEscapes: true}
 	{% endif %}
 
       </div>  
+      {% if unassigned|count > 0 %}
+      <a name="unassigned"></a>
+      <h2><span>Unassigned contributions</span></h2>
+      <div class="c12 row">
+	<p>Contributed talks will be listed here after the SOC has reviewed the submitted abstracts.</p>
+	{% else %}
+        {% for t in posters %}
+	{{ abstracts.single_abstract_any_type(t) }}
+	{% endfor %}
+      </div>  
+	{% endif %}
+
     </div>
 
 {% endblock content %}

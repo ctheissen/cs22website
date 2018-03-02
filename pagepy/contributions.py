@@ -73,14 +73,10 @@ def loctime(row):
 
 # missing in list below: mark invited talks
 def write_json_abstracts(abstr):
-    # see encodeURIComponent - which is a js function that could encode
-    # non-standard characters on the js level
-    # since here it's just written to json.
-    # Or, could encode here, but I don't know the equivalent python function
     data = {'data': []}
     for row in abstr:
         data['data'].append({'type': contribtype[row['type']],
-                             'author': row['authorlist'][0],
+                             'author': row['First author'],
                              'authorlist': row['Authors'],
                              'affiliations': row['affiliations'],
                              'abstract': row['Abstract'],
@@ -93,7 +89,7 @@ def write_json_abstracts(abstr):
         json.dump(data, fp)
 
 
-def process_google_form_value(tab):
+def process_google_form_value(tab, **kwargs):
     '''Process the values collected in the Google abstract form
 
     Some of the form fields require some processing to get them into
@@ -114,8 +110,9 @@ def process_google_form_value(tab):
     # Want to edit col, but might be too small to fit the string,
     # so make new col first
     newtype = Column(tab['type'], dtype='<U20')
-    newtype[(newtype == '') & (tab['Type of contribution'] == 'Poster')] = 'poster'
-    tab['type'] = newtype
+    if kwargs['autoacceptposters']:
+        newtype[(newtype == '') & (tab['Type of contribution'] == 'Poster')] = 'poster'
+        tab['type'] = newtype
 
     # Now some checks
     ind_poster = tab['type'] == 'poster'
@@ -138,9 +135,12 @@ def process_google_form_value(tab):
 def data(**kwargs):
     # Fast reader does not deal well with some unicode
     abstrfile = kwargs['abstracts']
+    if abstrfile is None:
+        write_json_abstracts([])
+        return {'talks': [], 'posters': [], 'unassigned': []}
     abstr = Table.read(abstrfile, fast_reader=False, fill_values=())
     abstr = abstr[abstr['Timestamp'] != '']
-    process_google_form_value(abstr)
+    process_google_form_value(abstr, **kwargs)
 
     ind_talk = (abstr['type'] == 'invited') | (abstr['type'] == 'contributed')
     ind_poster = abstr['type'] == 'poster'
