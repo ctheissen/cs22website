@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 import numpy as np
-from astropy.table import Table
+from astropy.table import Table, Column
 
 dates = {'': [2018, 7, 30],  # output unassigned talks on first day to make
                              # sure they are not overlooked
@@ -14,8 +14,6 @@ dates = {'': [2018, 7, 30],  # output unassigned talks on first day to make
          'Fri': [2018, 8, 3],
          'Sat': [2018, 8, 4]}
 '''Mapping between 3-character day code and date'''
-
-
 
 
 def parse_day_time(day, timestr, end=False):
@@ -56,11 +54,13 @@ contribtype = {'': 'not assigned',
                'invited': 'invited review',
                'contributed': 'contributed talk'}
 
+
 def combine_affils(affils):
     if len(affils) == 1:
         return affils[0]
     else:
         return '; '.join(['({}) {}'.format(i + 1, a) for i, a in enumerate(affils)])
+
 
 def loctime(row):
     if row['type'] == 'poster':
@@ -109,12 +109,18 @@ def process_google_form_value(tab):
     tab['affiliations'] = [combine_affils(r) for r in tab['affiliations']]
     tab['binary_time'] = [parse_day_time(r['day'], r['time']) for r in tab]
 
-    if 'poster number' not in tab.colnames:
-        posters['poster number'] = 'TBA'
+    # Poster submissions will always be accepted as poster unless specifically
+    # marked otherwise
+    # Want to edit col, but might be too small to fit the string,
+    # so make new col first
+    newtype = Column(tab['type'], dtype='<U20')
+    newtype[(newtype == '') & (tab['Type of contribution'] == 'Poster')] = 'poster'
+    tab['type'] = newtype
 
     # Now some checks
     ind_poster = tab['type'] == 'poster'
     posters = tab[ind_poster]
+
     # check it's a number otherwise sort will fail because string sorting will
     # give different answers
     if not np.issubdtype(posters['poster number'].dtype, np.integer):
