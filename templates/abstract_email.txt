@@ -1,9 +1,10 @@
 Dear {{dat['First author']}},
 
-we have processed your abstract an html file and into a pdf file (using LaTeX)
-so that you can check that everything looks right in both formats. Open the
-html file in a webbrowser as some email programs don't render the formulas
-correctly.
+we have processed your abstract to generate an html form for our website and a
+pdf file to be used in the printed abstract booklet.  Please check that
+everything looks right in both formats. You might have to save the html to a
+file and open it file in a webbrowser as some email programs don't render the
+formulas correctly.
 
 Note that some symbols e.g. "%" work just fine in html, but might cause
 unintended effects in LaTeX; it is best to avoid these (e.g. write "0.3" or "30
@@ -25,9 +26,9 @@ Common reasons why your abstract might not format correctly:
   automatically).
 
 If you need assistance or notice a problem with this message, please
-contact the Moritz Guenther at hgunther@mit.edu.
+contact the Moritz Günther <hgunther@mit.edu>.
 
-Looking forward to see you at CS20!
+Looking forward to seeing you at CS20!
 
 Yours,
    Moritz

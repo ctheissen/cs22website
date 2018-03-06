@@ -1,8 +1,7 @@
 {% macro single_abstract_any_type(t) -%}
-  \section{ {{t['Title']}} }
-  \textbf{ {{ t['authorlist'][0] }} }{% if t['Publish first author contact information?'] %}\footnote{\href{mailto: {{ t['Email Address'] }}}{{ '{' }}{{
-                   t['Email Address'] }}} }{% endif %}
-{% for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}\\
+\section{ {{t['Title']}} }
+\textbf{ {{ t['authorlist'][0] }}}{% if t['Publish first author contact information?'] %}\footnote{\href{mailto: {{ t['Email Address'] }}}{{ '{' }}{{ t['Email Address'] }}} }{%- endif %}
+{%- for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}\\
     {{ t['affiliations'] }}\\
 
 

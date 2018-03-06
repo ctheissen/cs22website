@@ -14,19 +14,11 @@
 {%- endmacro %}
 
 {% macro authoraffilabstract(t) -%}
-<p><strong>
-    {% if t['Publish first author contact information?'] %}
-    <a href='mailto:{{ t['Email Address'] }}'>
-      {% endif %}
-      {{ t['authorlist'][0] }}
-      {% if t['Publish first author contact information?'] %}
-    </a>
-    {% endif %}
-  </strong>
-  {% for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}<br>
+<p><strong>{%- if t['Publish first author contact information?'] %}<a href='mailto:{{ t['Email Address'] }}'>{% endif %}
+{{ t['authorlist'][0] }}{%- if t['Publish first author contact information?'] %}</a>{%- endif %}</strong>{%- for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}<br>
   {{ t['affiliations'] }}
 </p>
-<p>{{ t['Abstract'] }}</p>
+<p class="abstracts">{{ t['Abstract']|replace('\n\n', '</p><p class="abstracts">'|safe) }}</p>
 {%- endmacro %}
 
 {% macro single_abstract_any_type(t) -%}

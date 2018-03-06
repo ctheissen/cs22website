@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 import numpy as np
+import csv
 from astropy.table import Table, Column
 
 dates = {'': [2018, 7, 30],  # output unassigned talks on first day to make
@@ -138,7 +139,13 @@ def data(**kwargs):
     if abstrfile is None:
         write_json_abstracts([])
         return {'talks': [], 'posters': [], 'unassigned': []}
-    abstr = Table.read(abstrfile, fast_reader=False, fill_values=())
+    # abstr = Table.read(abstrfile, fast_reader=False, fill_values=())
+    out = []
+    with open('../data/abstr0305.csv', newline='') as f:
+         reader = csv.reader(f)
+         for row in reader:
+             out.append(row)
+    abstr = Table(rows=out[1:], names=out[0])
     abstr = abstr[abstr['Timestamp'] != '']
     process_google_form_value(abstr, **kwargs)
 

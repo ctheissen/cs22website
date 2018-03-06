@@ -101,9 +101,7 @@ processEscapes: true}
       <a name="unassigned"></a>
       <h2><span>Unassigned contributions</span></h2>
       <div class="c12 row">
-	<p>Contributed talks will be listed here after the SOC has reviewed the submitted abstracts.</p>
-	{% else %}
-        {% for t in posters %}
+        {% for t in unassigned %}
 	{{ abstracts.single_abstract_any_type(t) }}
 	{% endfor %}
       </div>  
