@@ -80,7 +80,7 @@ def write_json_abstracts(abstr):
                              'author': row['First author'],
                              'authorlist': row['Authors'],
                              'affiliations': row['affiliations'],
-                             'abstract': row['Abstract'],
+                             'abstract': '<p class="abstract">' + row['Abstract'].replace('\n\n', '</p><p class="abstract">') + '</p>',
                              'title': row['Title'],
                              'authoremail': "<a href='mailto:{0}'>{0}</a>".format(row['Email Address']) if row['Publish first author contact information?'] else '--',
                              'link': '<a href="{0}">{0}</a>'.format(row['Link to electronic material']) if row['Link to electronic material'] else '--',
@@ -134,14 +134,12 @@ def process_google_form_value(tab, **kwargs):
 
 
 def data(**kwargs):
-    # Fast reader does not deal well with some unicode
-    abstrfile = kwargs['abstracts']
-    if abstrfile is None:
+    if kwargs['abstracts'] is None:
         write_json_abstracts([])
         return {'talks': [], 'posters': [], 'unassigned': []}
     # abstr = Table.read(abstrfile, fast_reader=False, fill_values=())
     out = []
-    with open('../data/abstr0305.csv', newline='') as f:
+    with open(kwargs['abstracts'], newline='') as f:
          reader = csv.reader(f)
          for row in reader:
              out.append(row)
