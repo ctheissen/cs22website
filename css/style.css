@@ -43,7 +43,7 @@ ul ul,ol ul,ul ol,ol ol {margin-bottom: 0;}
 .c1 {width: 8.333333333333332%;}
 
 .sticky {min-height: 100%;height: auto !important;height: 100%;margin: 0 auto -30px;}
-.footer, .push {height: 30px;clear: both;}
+.push {height: 30px;clear: both;}
 
 /* Clearfix ================================================ */
 .clearfix:before,.clearfix:after {display: table;content: " ";}
@@ -201,6 +201,10 @@ h3 {color:#dc932c;font-weight:400;}
   text-decoration: none;
 }
 
+/* CFA FOOTER ===============================================================*/
+.leaf {display: inline; border-right: 1px solid; color: white;
+       padding-right: 8px;}
+.last {border-right: medium none;}
 
 /* CONTRIBUTION PAGE SPECIAL =================================================== */
 p.abstracts {margin: 5px 0;}
