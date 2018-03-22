@@ -163,6 +163,8 @@ def data(**kwargs):
         for r in notype:
             print(r['Timestamp'], r['type'], r['Title'])
 
+    if not kwargs['output_unassigned']:
+        abstr = abstr[abstr['type'] != '']
     write_json_abstracts(abstr)
 
     unass = notype if kwargs['output_unassigned'] else []

@@ -88,7 +88,7 @@ processEscapes: true}
       <h2><span>Posters</span></h2>
       <div class="c12 row">
 	{% if posters|count == 0 %}
-	<p>Contributed talks will be listed here after the SOC has reviewed the submitted abstracts.</p>
+	<p>Posters will be listed here after the SOC has reviewed the submitted abstracts.</p>
 	{% else %}
         {% for t in posters %}
 	{{ abstracts.single_abstract_any_type(t) }}
