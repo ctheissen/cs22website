@@ -1,8 +1,8 @@
 {% macro single_abstract_any_type(t) -%}
-\section{ {{t['Title']}} }
+\section{ {{t['Title']|replace('&', '\\&')}} }
 \textbf{ {{ t['authorlist'][0] }}}{% if t['Publish first author contact information?'] %}\footnote{\href{mailto: {{ t['Email Address'] }}}{{ '{' }}{{ t['Email Address'] }}} }{%- endif %}
 {%- for a in t['authorlist'][1:] %}; {{ a }}{% endfor %}\\
-    {{ t['affiliations'] }}\\
+    {{ t['affiliations']|replace('&', '\\&') }}\\
 
 
     {% if ((t['type'] == 'invited') or (t['type'] == 'contributed')) %}
@@ -23,6 +23,6 @@
 see also \url{ {{ t['Link to electronic material'] }} }\\{% endif %}
 \vspace{3 mm}
 
-      {{ t['Abstract'] }}
+      {{ t['Abstract']|replace('&', '\\&') }}
         
 {%- endmacro %}

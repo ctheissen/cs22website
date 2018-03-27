@@ -167,6 +167,7 @@ def data(**kwargs):
         abstr = abstr[abstr['type'] != '']
     write_json_abstracts(abstr)
 
+    notype.sort(['Select a major science topic', 'Authors'])
     unass = notype if kwargs['output_unassigned'] else []
 
     return {'talks': talks, 'posters': posters, 'unassigned': unass}

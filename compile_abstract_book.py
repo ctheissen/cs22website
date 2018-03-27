@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-'''Compile professional homepage
+'''Compile CS20 abstract book
 
-This script compiles the CS20 homepage.
+This script compiles the CS20 abstract book.
 It uses Jinja2 templates. There is a general template in /templates
 
 This script needs to be executed in the exact directory where it is now,
