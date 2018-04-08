@@ -201,6 +201,15 @@ h3 {color:#dc932c;font-weight:400;}
   text-decoration: none;
 }
 
+table.schedule {text-align: center;}
+.plenary {background-color: #79baec;}
+.splinter {background-color: #98ff98;}
+.break {background-color: #ffebcd;}
+.social {background-color: #f9966b;}
+.workshop {background-color: #f9b7ff;}
+tr.title {font-weight: bold;}
+td.time {font-weight: bold;}
+
 /* CFA FOOTER ===============================================================*/
 .leaf {display: inline; border-right: 1px solid; color: white;
        padding-right: 8px;}
