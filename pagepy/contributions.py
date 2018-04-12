@@ -4,9 +4,9 @@ import numpy as np
 import csv
 from astropy.table import Table, Column
 
-dates = {'': [2018, 7, 30],  # output unassigned talks on first day to make
+dates = {'': [2018, 7, 28],  # output unassigned talks on first day to make
                              # sure they are not overlooked
-         'TBA': [2018, 7, 30],
+         'TBA': [2018, 7, 28],
          'Sun': [2018, 7, 29],
          'Mon': [2018, 7, 30],
          'Tue': [2018, 7, 31],
