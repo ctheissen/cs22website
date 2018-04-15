@@ -4,8 +4,7 @@ import numpy as np
 import csv
 from astropy.table import Table, Column
 
-dates = {'': [2018, 7, 28],  # output unassigned talks on first day to make
-                             # sure they are not overlooked
+dates = {'': [2018, 8, 28],  # Posters don't have a date. They should be displayed last.
          'TBA': [2018, 7, 28],
          'Sun': [2018, 7, 29],
          'Mon': [2018, 7, 30],
@@ -67,8 +66,15 @@ def loctime(row):
     if row['type'] == 'poster':
         return 'poster number: {}'.format(row['poster number'])
     elif (row['type'] == 'invited') or (row['type'] == 'contributed'):
-        return '{}, {}'.format(row['day'] if 'day' in row else 'TBA',
-                               row['time'] if 'time' in row else 'TBA')
+        if ('day' in row.colnames) and (row['day'] != ''):
+            d = row['day']
+        else:
+            d = 'TBA'
+        if ('time' in row.colnames) and (row['time'] != ''):
+            t = row['time']
+        else:
+            t = 'time to be announced'
+        return '{}, {}'.format(d, t)
     else:
         return ''
 
@@ -85,6 +91,7 @@ def write_json_abstracts(abstr):
                              'authoremail': "<a href='mailto:{0}'>{0}</a>".format(row['Email Address']) if row['Publish first author contact information?'] else '--',
                              'link': '<a href="{0}">{0}</a>'.format(row['Link to electronic material']) if row['Link to electronic material'] else '--',
                              'loctime': loctime(row),
+                             'index': row['index'],
                              })
     with open('data/abstracts.json', 'w') as fp:
         json.dump(data, fp)
@@ -165,6 +172,8 @@ def data(**kwargs):
 
     if not kwargs['output_unassigned']:
         abstr = abstr[abstr['type'] != '']
+    abstr.sort(['binary_time', 'poster number'])
+    abstr['index'] = np.arange(1.0 * len(abstr))
     write_json_abstracts(abstr)
 
     notype.sort(['Select a major science topic', 'Authors'])
