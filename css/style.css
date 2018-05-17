@@ -210,6 +210,16 @@ table.schedule {text-align: center;}
 tr.title {font-weight: bold;}
 td.time {font-weight: bold;}
 
+div.highlightbox {
+  margin: 10px;
+  background-color: #ffeeee;
+}
+
+div.highlightbox p {
+  margin: 3%;
+  color: #000000;
+}
+
 /* CFA FOOTER ===============================================================*/
 .leaf {display: inline; border-right: 1px solid; color: white;
        padding-right: 8px;}
