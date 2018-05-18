@@ -140,19 +140,24 @@ def process_google_form_value(tab, **kwargs):
                                                          unique_counts[i]))
 
 
-def data(**kwargs):
-    if kwargs['abstracts'] is None:
-        write_json_abstracts([])
-        return {'talks': [], 'posters': [], 'unassigned': []}
-    # abstr = Table.read(abstrfile, fast_reader=False, fill_values=())
+def read_abstracts_table(filename, **kwargs):
     out = []
-    with open(kwargs['abstracts'], newline='') as f:
+    with open(filename, newline='') as f:
          reader = csv.reader(f)
          for row in reader:
              out.append(row)
     abstr = Table(rows=out[1:], names=out[0])
     abstr = abstr[abstr['Timestamp'] != '']
     process_google_form_value(abstr, **kwargs)
+    return abstr
+
+
+def data(**kwargs):
+    if kwargs['abstracts'] is None:
+        write_json_abstracts([])
+        return {'talks': [], 'posters': [], 'unassigned': []}
+    # abstr = Table.read(abstrfile, fast_reader=False, fill_values=())
+    abstr = read_abstracts_table(kwargs['abstracts'], **kwargs)
 
     ind_talk = (abstr['type'] == 'invited') | (abstr['type'] == 'contributed')
     ind_poster = abstr['type'] == 'poster'
