@@ -73,16 +73,23 @@ processEscapes: true}
 	</table>
       </div>
       <a name="talks"></a>
-      <h2><span>Talks</span></h2>
-      <div class="c12 row">
 	{% if talks|count == 0 %}
-	<p>Contributed talks will be listed here after the SOC has reviewed the submitted abstracts.</p>
+      <div class="c12 row">
+	<p>Contributed talks will be listed here after the SOC has reviewed the
+	submitted abstracts.</p>
+      </div>
 	{% else %}
+	{% for day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+	<h2><span>Talks on {{ day }}</span></h2>
+	<div class="c12 row">
         {% for t in talks %}
+	{% if t['day'] == day[:3] %}
 	{{ abstracts.single_abstract_any_type(t) }}
+	{% endif %}
+	{% endfor %}
+	</div>
 	{% endfor %}
 	{% endif %}
-      </div>
 	
       <a name="posters"></a>
       <h2><span>Posters</span></h2>
