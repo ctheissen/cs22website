@@ -113,6 +113,18 @@ def process_google_form_value(tab, **kwargs):
     tab['affiliations'] = [combine_affils(r) for r in tab['affiliations']]
     tab['binary_time'] = [parse_day_time(r['day'], r['time']) for r in tab]
 
+    team = Column(length=len(tab), dtype='<U40')
+    for i, f in enumerate(tab['First author']):
+        if " for " in f:
+            a, b = f.split(' for ')
+            tab['First author'][i] = a
+            team[i] = ' for ' + b
+    tab['team'] = team
+    for i, t in enumerate(tab['team']):
+        if t != '':
+            tab['authorlist'][i][0] = tab['authorlist'][i][0].split(' for ')[0] + ' (1)'
+            tab['affiliations'][i] = '(1) ' + tab['affiliations'][i]
+
     # Poster submissions will always be accepted as poster unless specifically
     # marked otherwise
     # Want to edit col, but might be too small to fit the string,
