@@ -80,6 +80,7 @@ processEscapes: true}
       </div>
 	{% else %}
 	{% for day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+        <a name="talkson{{ day }}"></a>
 	<h2><span>Talks on {{ day }}</span></h2>
 	<div class="c12 row">
         {% for t in talks %}

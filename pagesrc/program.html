@@ -45,11 +45,10 @@
 	    <td class="time">08:30-10:05</td>
 	    <td class="workshop" rowspan="7"><a href="registration.html#ciao">CIAO workshop</a> /
       <a href="https://exoplanets.nasa.gov/exep/events/205/">ExoPAG 18</a></td>
-	    <td class="plenary">Plenary session</td>
-	    <td class="plenary">Plenary session</td>
-	    <td class="plenary">Plenary session</td>
-	    <td class="plenary">Plenary session</td>
-	    <td class="plenary">Plenary session</td>
+{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+	    <td class="plenary"><a href="contributions.html#talkson{{ day
+	    }}">Plenary session</a></td>
+{% endfor %}
 	    <td class="workshop" rowspan="7"><a href="registration.html#hackday">Hack day</a></td>
 	  </tr>
 	  <tr>
@@ -62,11 +61,11 @@
 	  </tr>
 	  <tr>
 	    <td class="time">10:50-12:35</td>
-	    <td class="plenary">Plenary session</td>
-	    <td class="plenary">Plenary session</td>
-	    <td rowspan="2" class="plenary">Plenary session</td>
-	    <td class="plenary">Plenary session</td>
-	    <td rowspan="2" class="plenary">Plenary session</td>
+	    <td class="plenary"><a href="contributions.html#talksonMonday">Plenary session</a></td>
+	    <td class="plenary"><a href="contributions.html#talksonTuesday">Plenary session</a></td>
+	    <td rowspan="2" class="plenary"><a href="contributions.html#talksonWednesday">Plenary session</a></td>
+	    <td class="plenary"><a href="contributions.html#talksonThursday">Plenary session</a></td>
+	    <td rowspan="2" class="plenary"><a href="contributions.html#talksonFriday">Plenary session</a></td>
 	  </tr>
 	  <tr>
 	    <td class="time">12:35-13:05</td>
@@ -96,9 +95,9 @@
 	  <tr>
 	    <td class="time">16:00-17:30</td>
 	    <td></td>
-	    <td class="splinter">Splinter session 1,2,3</td>
-	    <td class="splinter">Splinter session 4,5,6</td>
-	    <td class="splinter">Splinter session 7,8,9</td>
+	    <td class="splinter"><a href="splinters.html">Splinter session 1,2,3</a></td>
+	    <td class="splinter"><a href="splinters.html">Splinter session 4,5,6</a></td>
+	    <td class="splinter"><a href="splinters.html">Splinter session 7,8,9</a></td>
 	    <td></td>
 	  </tr>
 	  <tr>
