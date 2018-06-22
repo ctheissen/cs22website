@@ -1,4 +1,5 @@
 import difflib
+import re
 import numpy as np
 from astropy.table import Table
 from astropy.table import join
@@ -6,7 +7,7 @@ from astropy.table import join
 from pagepy.contributions import read_abstracts_table
 
 ### Step 0 - Check the abstract list ###
-abstr = read_abstracts_table('../data/abstr0605.csv', autoacceptposters=False)
+abstr = read_abstracts_table('../data/abstr0622.csv', autoacceptposters=False)
 abstr['Email Address'] = [s.lower() for s in abstr['Email Address']]
 ar, counts = np.unique(abstr['Email Address'], return_counts=True)
 print('The following email addresses are associated with more than one abstract.')
@@ -20,9 +21,11 @@ print(ar[counts > 1])
 # - remove cancelled transactions
 # - normalize name field in caps (some people use ALL CAPS NAMES)
 # - remove title
-jenine = Table.read('../data/colstr1806012018-1 (2).csv', format='ascii')
+jenine = Table.read('../data/jenine0620.csv', format='ascii')
 # Remove rows at the end that don't have names in them
-jenine = jenine[:-3]
+jenine = jenine[~jenine['Last Name'].mask]
+# remove last row where headers are repeated
+jenine = jenine[:-1]
 for c in ['First Name', 'Last Name']:
     # The following is not correct for "van Dyck" etc, but good enough to match
     # and we won't use those names later on anyway.
@@ -31,6 +34,9 @@ jenine['Email'] = [s.lower() for s in jenine['Email']]
 
 jenine['name'] = ['{} {}'.format(jenine['First Name'][i], jenine['Last Name'][i]) for i in range(len(jenine))]
 
+# Make the registration type column that Jenine deleted (or something similar)
+# paid = [float(r.replace('$','').replace('-', '0')) for r in jenine['Dollar Amount PD']]
+# jenine['Registration Type'] = table.MaskedColumn(data=paid, mask=np.array(paid) < 400)
 
 ### Step 2: Identify people with waivers in Jenine's list ###
 ## 2a) LOC members
@@ -96,9 +102,15 @@ for mid in finaid['mergeid']:
             for c in ['waiver', 'mergeid']:
                 tab2[c][ind] = finaid[c][mid]
 
+print('')
 print('The following fin aid people are not yet registered')
 print(finaid[np.isin(finaid['mergeid'], tab2['mergeid'][~tab2['mergeid'].mask], invert=True)])
 tab2.remove_column('mergeid')
+
+print('')
+print('The following people are marked as WAIVER by Jenine, but do not have a waiver:')
+ind_jan_waive = tab2['Comments'] == 'WAIVED'
+print(tab2[ind_jan_waive & (tab2['waiver'] == '')]['Name', 'Email Address'])
 
 ### The following people with waivers paid for registration
 print("The following people with waivers paid for registration and should be refunded")
@@ -106,7 +118,8 @@ tab2[~tab2['Registration Type'].mask & ~tab2['waiver'].mask]['Name', 'Email Addr
 
 #### Now match to the abstracts
 abstrshort = abstr[:]
-abstrshort.keep_columns(['Email Address', 'First author', 'Title'])
+#abstrshort.keep_columns(['Email Address', 'First author', 'Title', 'PaymentID'])
+abstrshort.rename_column('PaymentID', 'Tran#')
 abstrshort['LastName'] = [s.split()[-1] for s in abstrshort['First author']]
 
 abstrshort['mergeid'] = np.arange(len(abstrshort))
@@ -117,21 +130,61 @@ for c in ['One Day Conference: Jul. 30th, 2018',
           'One Day Conference: Aug 2nd, 2018',
           'One Day Conference: Aug 3rd, 2018',
           'waiver']:
-    confreg = confreg |  ~tab2[c].mask
+    confreg = confreg | ~tab2[c].mask
+
+confreg = confreg | (tab2['Comments'] == 'PYMNT PENDING')
 
 confreg = tab2[confreg]
+inddays = ~tab2['One Day Conference: Jul. 30th, 2018'].mask
+for c in ['One Day Conference: Jul. 30th, 2018',
+          'One Day Conference: Jul. 31st, 2018',
+          'One Day Conference: Aug 1st, 2018',
+          'One Day Conference: Aug 2nd, 2018',
+          'One Day Conference: Aug 3rd, 2018']:
+    inddays = inddays | ~tab2[c].mask
+
+inddays = inddays
+print("Number of registrations with financial aid: {}".format((confreg['waiver'] == 'aid').sum()))
+print("Number of registrations from LOC: {}".format((confreg['waiver'] == 'LOC').sum()))
+
 print("Number of total registrations (full, one day, or waved): {}".format(len(confreg)))
-print("Number of paid full registration (early + normal + late): {}".format((~tab2['Registration Type'].mask).sum()))
+print("Number of people who registered for one or more days individually: {}".format(inddays.sum()))
+print("Number of paid full registration (early + normal + late): {}".format((~tab2['Registration Type'].mask ).sum()))
+
 tab2.rename_column('Title', 'Nametitle')
 
 tab3 = join(tab2, abstrshort, join_type='left', keys=['Email Address'])
+# Make to string because that's the format the abstract table has
+tab3['Tran#'] = ['{}'.format(i) for i in tab3['Tran#_1']]
 
 # Which email addresses are matched more than once?
 mid, n = np.unique(tab3['mergeid'], return_counts=True)
 mids = mid[(n > 1) & ~(mid.mask)]
 print('Abstract email addresses that turn up more than once in the registration list')
 for n in mids:
-    print (abstrshort[n])
+    print (abstrshort[n]['Email Address'])
+
+print('-----')
+print('Matching by Payment ID number given to me')
+abstr_with_pymentid = abstrshort[abstrshort['Tran#'] != '']
+abstrshort2 = abstrshort[abstrshort['Tran#'] == '']
+if not (len(abstrshort2) + len(abstr_with_pymentid)) == len(abstrshort):
+    raise ValueError('Tran# column is suspect')
+
+tabtest1 = join(tab3, abstr_with_pymentid, join_type='outer', keys='Tran#')
+tabtest2 = join(tab3, abstr_with_pymentid, join_type='left', keys='Tran#')
+if len(tabtest1) != len(tabtest2):
+    raise ValueError('Not all payment IDs exisit')
+
+print(set(tabtest1['Tran#']) - set(tabtest2['Tran#']))
+
+for mid in abstrshort['mergeid']:
+    if not mid in tab3['mergeid']:
+        if abstrshort['Tran#'][mid] != '':
+            ind = tab3['Tran#'] == abstrshort['Tran#'][mid]
+            for c in ['First author', 'Title', 'mergeid']:
+                tab3[c][ind] = abstrshort[c][mid]
+
 print('-----')
 print('Matching by full name')
 # Now for those that are not matched yet use Full Name
@@ -180,5 +233,14 @@ print('The following abstr people are not yet registered')
 abstrnoregistered = abstrshort[np.isin(abstrshort['mergeid'], tab3['mergeid'][~tab3['mergeid'].mask], invert=True)]
 print(abstrnoregistered)
 print('The following registered people did not submit an abstract:')
+regnoabstr = tab3[tab3['mergeid'].mask]
 print(tab3[tab3['mergeid'].mask]['name', 'Email Address'])
-tab3.remove_column('mergeid')
+#tab3.remove_column('mergeid')
+
+abstrnoregistered.sort('LastName')
+regnoabstr.sort('Last Name')
+
+abstrnoregistered['First author', 'LastName', 'Tran#'].show_in_browser(jsviewer=True)
+regnoabstr['First Name', 'Last Name', 'Tran#'].show_in_browser(jsviewer=True)
+
+print('Number of posters from registered participants: {}'.format((tab3['type'] == 'poster').sum()))
