@@ -1,6 +1,4 @@
-
 {% extends "templates/basic.html" %}
-{% import "templates/abstracts_helper.html" as abstracts %}
 {% set active_page = "Contributions" %}
 
 {% block content %}
@@ -11,95 +9,116 @@ processEscapes: true}
 });
 </script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="js/abstractstab.js"></script>
-	
 
     <div class="container clearfix mt-100 mb-20">
-      {% include "templates/globalmessage.html" ignore missing %}
-      {% include "templates/timeline.html" ignore missing %}
-      <a name="top"></a>
-      <div class="c12 row">
-	<p>Jump to <a href="#table">table of accepted all contributions</a>,
-	  <a href="#talks">accepted talks</a>, or 
-	  <a href="#posters">accepted posters</a>.
-	</p>
-      </div>
+         {% include "templates/globalmessage.html" ignore missing %}
 
-      <a name="table"></a>
-      <h2><span>Accepted contributions</span></h2>
+      <h2><span>Registration</span></h2>
       <div class="c12 row">
-        <p>Use the table below to view and search abstracts or jump directly
-	  to a listing of all <a href="#talks">talks</a> or <a href="#posters">posters</a>.
-	</p>
-
-	<table id="example" class="display" width="100%" cellspacing="0">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Type</th>
-              <th>Author</th>
-              <th>Title</th>
-	      <th>Authorlist</th>
-	      <th>Affiliations</th>
-	      <th>Abstract</th>
-            </tr>
-          </thead>
-          <tfoot>
-            <tr>
-              <th></th>
-              <th>Type</th>
-              <th>Author</th>
-              <th>Title</th>
-	      <th>Authorlist</th>
-	      <th>Affiliations</th>
-	      <th>Abstract</th>
-            </tr>
-          </tfoot>
-	</table>
-      </div>
-      <a name="talks"></a>
-	{% if talks|count == 0 %}
-      <div class="c12 row">
-	<p>Contributed talks will be listed here after the SOC has reviewed the
-	submitted abstracts.</p>
-      </div>
-	{% else %}
-	{% for day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
-        <a name="talkson{{ day }}"></a>
-	<h2><span>Talks on {{ day }}</span></h2>
-	<div class="c12 row">
-        {% for t in talks %}
-	{% if t['day'] == day[:3] %}
-	{{ abstracts.single_abstract_any_type(t) }}
-	{% endif %}
-	{% endfor %}
-	</div>
-	{% endfor %}
-	{% endif %}
-	
-      <a name="posters"></a>
-      <h2><span>Posters</span></h2>
-      <div class="c12 row">
-	{% if posters|count == 0 %}
-	<p>Posters will be listed here after the SOC has reviewed the submitted abstracts.</p>
-	{% else %}
-        {% for t in posters %}
-	{{ abstracts.single_abstract_any_type(t) }}
-	{% endfor %}
-	{% endif %}
-
-      </div>  
-      {% if unassigned|count > 0 %}
-      <a name="unassigned"></a>
-      <h2><span>Unassigned contributions</span></h2>
-      <div class="c12 row">
-        {% for t in unassigned %}
-	{{ abstracts.single_abstract_any_type(t) }}
-	{% endfor %}
-      </div>  
-	{% endif %}
-
+	<p>We have reached 500 participants. Registration for the main conference is closed; contact us at <a href="mailto:cs20@cfa.harvard.edu">cs20@cfa.harvard.edu</a> to get on the waitlist.</p>
+	<strong>The following events require a separate registration and still have open space:</strong></p>
+	<ul class="listing">
+	  <li>July 29: <a href="registration.html#ciao">CIAO workshop</a></li>
+	  <li>July 29: <a href="https://exoplanets.nasa.gov/exep/events/205/">ExoPAG 18</a></li>
+	  <li>July 30: <a href="http://www.chara.gsu.edu/workshops/coolstars-2018">Meet the CHARA Array</a></li>
+	  <li>Aug 4: <a href="registration.html#hackday">Hack day</a></li>
+	</ul>
     </div>
+
+<h2><span id="Talks">Talks</span></h2>
+<div class="c12 row">
+  <p>Invited speakers should plan for a talk of  25 min plus 10 min for questions. Contributed talks should be 12 min long plus 3 min for questions. The resolution of the projector is 1920 x 1080 (so the format is 16:9). Presentations need to be uploaded onto our computer before the talk, so contact an LOC member at least 2 hours before your talk. Our computers provide standard presentation software for pdf, PowerPoint, KeyNote, LibreOffice and OpenOffice as well as webbrowsers and software for common movie formats. If you have any special requirements, please contact us at <a href="mailto:cs20@cfa.harvard.edu">cs20@cfa.harvard.edu</a> <strong>before the conference</strong>.</p>
+</div>
+
+<h2><span id="Posters">Posters</span></h2>
+<div class="c12 row">
+  <p>There are two poster rooms where posters can be displayed throughout the conference (Monday to Friday). Both of them are adjacent to the main auditorium. We will provide all hardware required to hang up posters. The space for each poster is square with each site $1.75\times10^{-9}R_{\odot}=122\;\thextrm{cm}=4.0\;\textrm{ft}$
+  </p>  
+</div>
+
+<h2><span id="Proceedings">Proceedings</span></h2>
+<div class="c12 row">
+  <p><a href="https://zenodo.org/communities/cs20/">Proceedings for Cool Stars 20</a> will be entirely electronic. Submission will be handled using <a href="https://zenodo.org/">Zenodo</a>, an EU funded data and project repository, and then indexed on the <a href="https://ui.adsabs.harvard.edu/">ADS</a>. All submissions are assigned a Digital Object Identifier (DOI) number through Zenodo, <a href="http://help.zenodo.org/features/">making contributions citeable</a>, before indexing to <a href="https://ui.adsabs.harvard.edu/">ADS</a> to make contributions discoverable. Submission to the <a href="https://arxiv.org/submit">arXiv</a> in parallel with submission to the conference proceedings is encouraged. Each contribution will be edited for language and, to a lesser degree, content. Please typeset your proceeding contribution using the <a href="https://github.com/CoolStars20/proceedings/releases/latest">Cool Stars 20 LaTeX document class</a>. Since proceedings are only electronic, there are no page limits. To submit, go to <a href="https://zenodo.org/communities/cs20/">https://zenodo.org/communities/cs20/</a> and click on the green "New upload" button.
+  </p>
+  <p>
+    We will provide more detailed instructions in the next few weeks.
+  </p>  
+</div>
+
+      <h2><span id="registration">Registration for conference</span></h2>
+      <div class="c12 row">
+	<p>We have reached 500 participants. Registration is closed.</p>
+
+        <p>Our facilities can support about 500 attendees. Based on the
+        previous Cool Stars meetings, we expect that every interested
+        astronomer should have a chance to join in, but the only guarantee is
+        to register early. Early registration is 475 $ till May 1st. After
+        that the price will increase to 550 $ (regular registration) till June
+        15th. Late registration will be 600 $. Full registration includes the
+        opening reception on Sunday, access to the conference on all five
+        days with coffee breaks and the conference dinner on Thursday. We
+        offer 1-d registration for 125 $ / day (which includes coffee breaks
+        but not the opening reception or banquet) as well as extra guest
+        tickets for the opening reception or the banquet.</p>
+
+	<p>At the time of registration you can also book one of
+	the <a href="excursions.html">excursions</a>.</p>
+
+	<p>We accept all major credit cards. Registration and credit card
+	processing is handled by secure servers of the Smithsonian Institution.
+	<a href="https://www.cfa.harvard.edu/pcgi/conf_reg/reg.pl?conf_id=COLSTR18">
+	  Click here</a> to be forwarded to the payment form. Contact <a href="mailto:jhumber@cfa.harvard.edu">Jenine Humber</a> if you have any
+	problems or questions related to registration and payment.</p>
+
+	<h3>Registration Cancellation Policy</h3>
+	<p>Cancellations must be received in writing or via email by June 15, 2018 for a full refund less a $30 processing charge. Cancellations received June 15, 2018 through July 15, 2018 receive a 50% refund. Cancellations made after July 16, 2018, or persons who do not appear at the workshop are not eligible for any refund.</p>
+
+	<h3>Tour/Banquet Policy</h3>
+	<p>Cancellations for tours or banquet guests must be received in writing or via email by June 15, 2018 for a full refund less a $30 processing charge. Cancellations received June 15, 2018 through July 15, 2018 receive a 50% refund. Cancellations made after June 16, 2018, or persons who do not attend are not eligible for any refund. Conference registrants who do not plan on attending the banquet or other events included in the standard registration fee are not eligible for a partial refund.</p>
+
+	<p>We accept all major credit cards. Registration and credit card
+	processing is handled by secure servers of the Smithsonian Institution.
+	<a href="https://www.cfa.harvard.edu/pcgi/conf_reg/reg.pl?conf_id=COLSTR18">
+	  Click here</a> to be forwarded to the payment form. Contact <a href="mailto:jhumber@cfa.harvard.edu">Jenine Humber</a> if you have any
+	problems or questions related to registration and payment.</p>
+
+	<h3>Registration Cancellation Policy</h3>
+	<p>Cancellations must be received in writing or via email by June 15, 2018 for a full refund less a $30 processing charge. Cancellations received June 15, 2018 through July 15, 2018 receive a 50% refund. Cancellations made after July 16, 2018, or persons who do not appear at the workshop are not eligible for any refund.</p>
+
+	<h3>Tour/Banquet Policy</h3>
+	<p>Cancellations for tours or banquet guests must be received in writing or via email by June 15, 2018 for a full refund less a $30 processing charge. Cancellations received June 15, 2018 through July 15, 2018 receive a 50% refund. Cancellations made after June 16, 2018, or persons who do not attend are not eligible for any refund. Conference registrants who do not plan on attending the banquet or other events included in the standard registration fee are not eligible for a partial refund.</p>
+      </div>
+
+      <h2><span>Registration for EXOPAG 18 workshop</span></h2>
+      <div class="c12 row">
+	<p>See <a href="https://exoplanets.nasa.gov/exep/events/205/">here</a>.</p>
+
+      <h2><span id="ciao">Registration for CIAO workshop</span></h2>
+      <div class="c12 row">
+	<p>The CIAO workshop requires a separate registration (at no cost
+	except maybe for pizza) <a href="https://docs.google.com/forms/d/e/1FAIpQLSfbLXtttqfkDqLgnLHr0zwbhDbdmVeV4BEK1wu1plFU8SBuGg/viewform?usp=sf_link">here</a>.
+	<p> The workshop will take place on Sunday July 28th, at
+	the <a href="https://www.cfa.harvard.edu/about/directions-cfa-60-garden-street">
+Harvard-Smithsonian Center for Astrophysics</a>. We'll distribute specific
+	directions how to get there closer to the meeting.</p>
+
+
+      <h2 id="hackday"><span>Registration for hack day</span></h2>
+      <div class="c12 row">
+	<p>The Hack day requires a separate registration (no cost except maybe
+	for
+	pizza) <a href="https://docs.google.com/forms/d/e/1FAIpQLSepMDxjuK4-zngA4zgfNuyiny1g6BxYXykD9RvYPnnOHueunQ/viewform?usp=sf_link">
+	in this form</a> and attendance is
+	limited to 50 people first come-first served. If all spots are filled,
+	we'll keep a wait list, so please let us know if you registered but
+	your plans changed!</p>
+	<p> The Hack day will take place on Saturday Aug 4th, at
+	the <a href="https://www.cfa.harvard.edu/about/directions-cfa-60-garden-street">
+Harvard-Smithsonian Center for Astrophysics</a>. We'll distribute specific
+	directions how to get there closer to the meeting.</p>
+	</div>
+    </div>
+
+
 
 {% endblock content %}

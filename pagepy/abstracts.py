@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 import numpy as np
 import csv
-from astropy.table import Table, Column
+from astropy.table import Table, Column, join
 
 dates = {'': [2018, 8, 28],  # Posters don't have a date. They should be displayed last.
          'TBA': [2018, 7, 28],
@@ -170,6 +170,15 @@ def data(**kwargs):
         return {'talks': [], 'posters': [], 'unassigned': []}
     # abstr = Table.read(abstrfile, fast_reader=False, fill_values=())
     abstr = read_abstracts_table(kwargs['abstracts'], **kwargs)
+    abstr['Email Address'] = [s.lower() for s in abstr['Email Address']]
+
+    if kwargs['registered_abstracts']:
+        regabs = Table.read(kwargs['registered_abstracts'], format='ascii.csv')
+        #regabs['registered'] = True
+        abstr = join(abstr, regabs)
+        #abstr = abstr[abstr['registered']]
+
+
 
     ind_talk = (abstr['type'] == 'invited') | (abstr['type'] == 'contributed')
     ind_poster = abstr['type'] == 'poster'

@@ -10,3 +10,5 @@ parser.add_argument('--output-unassigned', action='store_true',
                     help='Output presentations that do not have a "type" entry in the table')
 parser.add_argument('--autoacceptposters', action='store_true',
                     help='Automatically add type "poster" for all contributiosn submitted as poster')
+parser.add_argument('-r', '--registered-abstracts',
+                    help='csv file with author and title for all abstracts from REGISTERED authors. Only abstracts that are in the abstracts table AND in this list will be processed.')

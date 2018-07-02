@@ -7,7 +7,7 @@ from astropy.table import join
 from pagepy.contributions import read_abstracts_table
 
 ### Step 0 - Check the abstract list ###
-abstr = read_abstracts_table('../data/abstr0622.csv', autoacceptposters=False)
+abstr = read_abstracts_table('../data/abstr0630.csv', autoacceptposters=False)
 abstr['Email Address'] = [s.lower() for s in abstr['Email Address']]
 ar, counts = np.unique(abstr['Email Address'], return_counts=True)
 print('The following email addresses are associated with more than one abstract.')
@@ -244,3 +244,8 @@ abstrnoregistered['First author', 'LastName', 'Tran#'].show_in_browser(jsviewer=
 regnoabstr['First Name', 'Last Name', 'Tran#'].show_in_browser(jsviewer=True)
 
 print('Number of posters from registered participants: {}'.format((tab3['type'] == 'poster').sum()))
+
+abstrregistered = abstrshort[np.isin(abstrshort['mergeid'], tab3['mergeid'][~tab3['mergeid'].mask])]
+
+# Write out a table that allows me to find which authors are registered
+abstrregistered[['Email Address']].write('../data/abstr0630_reg.csv', format='ascii.csv')
