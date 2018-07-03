@@ -249,3 +249,12 @@ abstrregistered = abstrshort[np.isin(abstrshort['mergeid'], tab3['mergeid'][~tab
 
 # Write out a table that allows me to find which authors are registered
 abstrregistered[['Email Address']].write('../data/abstr0702_reg.csv', format='ascii.csv')
+
+
+
+# Step X - read in full Jenine table
+# Shift last few rows manually that were added
+jfull = Table.read('../data/Coolstars20070318_shifted.csv', format='ascii')
+# Check for double rows
+# Cross match rows with each other
+# Check numbers compared to the other spreadsheet I have
