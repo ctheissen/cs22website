@@ -21,11 +21,11 @@ print(ar[counts > 1])
 # - remove cancelled transactions
 # - normalize name field in caps (some people use ALL CAPS NAMES)
 # - remove title
-jenine = Table.read('../data/jenine0620.csv', format='ascii')
+jenine = Table.read('../data/jenine0629.csv', format='ascii')
 # Remove rows at the end that don't have names in them
 jenine = jenine[~jenine['Last Name'].mask]
 # remove last row where headers are repeated
-jenine = jenine[:-1]
+#jenine = jenine[:-1]
 for c in ['First Name', 'Last Name']:
     # The following is not correct for "van Dyck" etc, but good enough to match
     # and we won't use those names later on anyway.
@@ -257,4 +257,37 @@ abstrregistered[['Email Address']].write('../data/abstr0702_reg.csv', format='as
 jfull = Table.read('../data/Coolstars20070318_shifted.csv', format='ascii')
 # Check for double rows
 # Cross match rows with each other
+mid, uniqueind, n = np.unique(jfull['Trans#'], return_index=True, return_counts=True)
+print('Transaction IDs turning up more than once:')
+for i in (n>1).nonzero()[0]:
+    print (jfull['Trans#'][i])
+
+jfull1 = jfull[uniqueind]
+
+for i in (n > 1).nonzero()[0]:
+    # Fill,because we can't compare masked rows
+    tabdub = (jfull[jfull['Trans#']== jfull1['Trans#'][i]]).filled()
+    for row in tabdub.filled():
+        if not row == tabdub[0]:
+            print(row)
+# I don't see anything, so those are really just dublicate entries
+
 # Check numbers compared to the other spreadsheet I have
+reg = ~jfull1['Reg'].mask
+jfull2 = jfull1[reg]
+
+mid, unique_ind,  n = np.unique(jfull2['Email'], return_index=True, return_counts=True)
+for m in mid:
+    # find all associated transaction ids:
+    ids = jfull2['Trans#'][jfull2['Email'] == m]
+    if not (np.isin(ids, tab2['Tran#'])).sum() == 1:
+        print(jfull2['FirstName', 'LastName', 'Trans#'][jfull2['Email'] == m])
+        print(m, np.isin(ids, tab2['Tran#']))
+
+
+mids = mid[(n > 1)]
+
+jfull3 = jfull2[unique_ind]
+
+
+# So, ignoreing anythgin beyond 8814 because that's the latest curated list I got from Jenine, I still see the following double regs (or missing regs):
