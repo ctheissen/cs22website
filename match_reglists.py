@@ -7,7 +7,7 @@ from astropy.table import join
 from pagepy.abstracts import read_abstracts_table
 
 ### Step 0 - Check the abstract list ###
-abstr = read_abstracts_table('../data/abstr0702.csv', autoacceptposters=False)
+abstr = read_abstracts_table('../data/abstr0711.csv', autoacceptposters=False)
 abstr['Email Address'] = [s.lower() for s in abstr['Email Address']]
 ar, counts = np.unique(abstr['Email Address'], return_counts=True)
 print('The following email addresses are associated with more than one abstract.')
@@ -21,7 +21,7 @@ print(ar[counts > 1])
 # - remove cancelled transactions
 # - normalize name field in caps (some people use ALL CAPS NAMES)
 # - remove title
-jenine = Table.read('../data/jenine0629.csv', format='ascii')
+jenine = Table.read('../data/jenine0710.csv', format='ascii')
 # Remove rows at the end that don't have names in them
 jenine = jenine[~jenine['Last Name'].mask]
 # remove last row where headers are repeated
@@ -182,7 +182,7 @@ for mid in abstrshort['mergeid']:
     if not mid in tab3['mergeid']:
         if abstrshort['Tran#'][mid] != '':
             ind = tab3['Tran#'] == abstrshort['Tran#'][mid]
-            for c in ['First author', 'Title', 'mergeid']:
+            for c in ['First author', 'Title', 'mergeid', 'type']:
                 tab3[c][ind] = abstrshort[c][mid]
 
 print('-----')
@@ -200,7 +200,7 @@ for mid in abstrshort['mergeid']:
             dname = [dname[0]]
             ind = tab3['name'] == dname[0]
             print('Matching {} to {} using key {}'.format(abstrshort['First author'][mid], tab3['name'][ind].data, dname[0]))
-            for c in ['First author', 'Title', 'mergeid']:
+            for c in ['First author', 'Title', 'mergeid', 'type']:
                 tab3[c][ind] = abstrshort[c][mid]
 
 
@@ -224,33 +224,54 @@ for mid in abstrshort['mergeid']:
                     ind[n] = False
             if ind.sum() == 1:
                 print('Matching {} to {} using key {} {}'.format(abstrshort['First author'][mid], tab3['name'][ind].data, abstrfirst.group()[:minlen], dname[0]))
-                for c in ['First author', 'Title', 'mergeid']:
+                for c in ['First author', 'Title', 'mergeid', 'type']:
                     tab3[c][ind] = abstrshort[c][mid]
             elif ind.sum() > 1:
                 print('Multiple possible matches for {}: {} - match by hand'.format(abstrshort['First author'][mid], tab3['name'][ind].data))
 
-print('The following abstr people are not yet registered')
+#print('The following abstr people are not yet registered')
 abstrnoregistered = abstrshort[np.isin(abstrshort['mergeid'], tab3['mergeid'][~tab3['mergeid'].mask], invert=True)]
-print(abstrnoregistered)
-print('The following registered people did not submit an abstract:')
+#print(abstrnoregistered)
+#print('The following registered people did not submit an abstract:')
 regnoabstr = tab3[tab3['mergeid'].mask]
-print(tab3[tab3['mergeid'].mask]['name', 'Email Address'])
+#print(tab3[tab3['mergeid'].mask]['name', 'Email Address'])
 #tab3.remove_column('mergeid')
 
 abstrnoregistered.sort('LastName')
 regnoabstr.sort('Last Name')
 
-abstrnoregistered['First author', 'LastName', 'Tran#'].show_in_browser(jsviewer=True)
-regnoabstr['First Name', 'Last Name', 'Tran#'].show_in_browser(jsviewer=True)
+#abstrnoregistered['First author', 'LastName', 'Tran#'].show_in_browser(jsviewer=True)
+#regnoabstr['First Name', 'Last Name', 'Tran#'].show_in_browser(jsviewer=True)
 
 print('Number of posters from registered participants: {}'.format((tab3['type'] == 'poster').sum()))
 
 abstrregistered = abstrshort[np.isin(abstrshort['mergeid'], tab3['mergeid'][~tab3['mergeid'].mask])]
 
 # Write out a table that allows me to find which authors are registered
-abstrregistered[['Email Address']].write('../data/abstr0702_reg.csv', format='ascii.csv')
+abstrregistered[['Email Address']].write('../data/abstr0710_reg.csv', format='ascii.csv')
+
+# Sort by last name but keep Alexander Brown and Fred Walter together
+fredmergeid = abstrregistered['mergeid'][abstrregistered['LastName'] == 'Walter']
+abstrregistered['LastName'][abstrregistered['mergeid'] == fredmergeid] = "Brown"
+abstrregistered.sort('LastName')
+abstrregistered['LastName'][abstrregistered['mergeid'] == fredmergeid] = "Walter"
+abstrregistered['poster number'] = np.arange(1, len(abstrregistered) + 1)
+abmerge = abstrregistered['Email Address', 'poster number']
+abstr.remove_column('poster number')
+abj = join(abstr, abmerge)
+abj['Email Address', 'poster number'].write('../data/asignposternumber.csv', format='ascii.csv')
+# Then load this new table into google docs and manually copy and paste the poster number column.
+# Export Google docs again and use that to build booklet and website.
 
 
+#### Build participants list as needed for website or badges.
+# A) Fill institutions
+tab3['First author', 'LastName', 'First Name', 'Last Name', 'Institution']
+jfull = Table.read('../data/Coolstars20070318_shifted.csv', format='ascii')
+for i in range(len(tab3)):
+    if tab3['Institution'].mask[i]:
+        ind = jfull['Trans#'] == tab3['Tran#'][i]
+        tab3['Institution'][i] = jfull['Affil'][ind.nonzero()[0][0]]
 
 # Step X - read in full Jenine table
 # Shift last few rows manually that were added
@@ -291,3 +312,7 @@ jfull3 = jfull2[unique_ind]
 
 
 # So, ignoreing anythgin beyond 8814 because that's the latest curated list I got from Jenine, I still see the following double regs (or missing regs):
+
+
+# Number of people per day
+singledays
