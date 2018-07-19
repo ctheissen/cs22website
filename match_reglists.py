@@ -7,7 +7,7 @@ from astropy.table import join
 from pagepy.abstracts import read_abstracts_table
 
 ### Step 0 - Check the abstract list ###
-abstr = read_abstracts_table('../data/abstr0711.csv', autoacceptposters=False)
+abstr = read_abstracts_table('../data/abstr0718.csv', autoacceptposters=False)
 abstr['Email Address'] = [s.lower() for s in abstr['Email Address']]
 ar, counts = np.unique(abstr['Email Address'], return_counts=True)
 print('The following email addresses are associated with more than one abstract.')
@@ -21,7 +21,7 @@ print(ar[counts > 1])
 # - remove cancelled transactions
 # - normalize name field in caps (some people use ALL CAPS NAMES)
 # - remove title
-jenine = Table.read('../data/jenine0710.csv', format='ascii')
+jenine = Table.read('../data/jenine0718.csv', format='ascii')
 # Remove rows at the end that don't have names in them
 jenine = jenine[~jenine['Last Name'].mask]
 # remove last row where headers are repeated
