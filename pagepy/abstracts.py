@@ -113,7 +113,7 @@ def process_google_form_value(tab, **kwargs):
     tab['affiliations'] = [combine_affils(r) for r in tab['affiliations']]
     tab['binary_time'] = [parse_day_time(r['day'], r['time']) for r in tab]
 
-    team = Column(length=len(tab), dtype='<U40')
+    team = Column(length=len(tab), dtype='<U140')
     for i, f in enumerate(tab['First author']):
         if " for " in f:
             a, b = f.split(' for ')
