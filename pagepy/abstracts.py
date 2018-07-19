@@ -186,7 +186,12 @@ def data(**kwargs):
     talks = abstr[ind_talk]
     talks.sort(['binary_time', 'type', 'Select a major science topic'])
     posters = abstr[ind_poster]
-    posters.sort(['poster number', 'Authors'])
+    posters['intnumber'] = [int(i) for i in posters['poster number']]
+    posters.sort(['intnumber', 'Authors'])
+
+    #import pdb
+    #pdb.set_trace()
+    #print('asdfasdfasdfasdf')
 
     # List all entries that do not have a valid type
     notype = abstr[~ind_talk & ~ind_poster]

@@ -250,6 +250,12 @@ abstrregistered = abstrshort[np.isin(abstrshort['mergeid'], tab3['mergeid'][~tab
 # Write out a table that allows me to find which authors are registered
 abstrregistered[['Email Address']].write('../data/abstr0710_reg.csv', format='ascii.csv')
 
+### Read in hand edited table of participants
+useabs = Table.read('../data/abstr0718_reg.csv', format='ascii.csv')
+useabs['registered'] = True
+abstrregistered = join(abstrshort, useabs)
+abstrregistered = abstrregistered[abstrregistered['type'] == 'poster']
+
 # Sort by last name but keep Alexander Brown and Fred Walter together
 fredmergeid = abstrregistered['mergeid'][abstrregistered['LastName'] == 'Walter']
 abstrregistered['LastName'][abstrregistered['mergeid'] == fredmergeid] = "Brown"
@@ -257,9 +263,18 @@ abstrregistered.sort('LastName')
 abstrregistered['LastName'][abstrregistered['mergeid'] == fredmergeid] = "Walter"
 abstrregistered['poster number'] = np.arange(1, len(abstrregistered) + 1)
 abmerge = abstrregistered['Email Address', 'poster number']
+
+# Make a column that is long enough
 abstr.remove_column('poster number')
-abj = join(abstr, abmerge)
-abj['Email Address', 'poster number'].write('../data/asignposternumber.csv', format='ascii.csv')
+abstr['poster number'] = 'a really long string'
+abstr['poster number'] = ''
+
+for row in abmerge:
+    ind = abstr['Email Address'] == row['Email Address']
+    ind = ind.nonzero()[0]
+    abstr['poster number'][ind] = row['poster number']
+
+abstr['Email Address', 'poster number'].write('../data/asignposternumber.csv', format='ascii.csv')
 # Then load this new table into google docs and manually copy and paste the poster number column.
 # Export Google docs again and use that to build booklet and website.
 
