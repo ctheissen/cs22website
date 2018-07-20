@@ -325,9 +325,31 @@ mids = mid[(n > 1)]
 
 jfull3 = jfull2[unique_ind]
 
+tab3['affil1'] = ['' if a is np.ma.masked else a.split(';')[0] for a in tab3['affiliations']]
 
-# So, ignoreing anythgin beyond 8814 because that's the latest curated list I got from Jenine, I still see the following double regs (or missing regs):
+for i, row in enumerate(tab3):
+    if row['Institution'] is np.ma.masked:
+        ind = jfull3['Trans#'] == int(row['Tran#'])
+        if np.any(ind):
+            tab3['Institution'][i] = jfull3['Affil'][ind][0]
 
 
-# Number of people per day
-singledays
+tab3['First author', 'LastName', 'First Name', 'Last Name', 'Institution', 'affil1', 'waiver']
+
+ldays = []
+for i, row in enumerate(tab3):
+    lrow = []
+    for a, b in zip([ 'One Day Conference: Jul. 30th, 2018',
+                  'One Day Conference: Jul. 31st, 2018',
+                  'One Day Conference: Aug 1st, 2018',
+                  'One Day Conference: Aug 2nd, 2018',
+                  'One Day Conference: Aug 3rd, 2018'],
+                 ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']):
+        if row[a] is not np.ma.masked:
+            lrow.append(b)
+    ldays.append(lrow)
+
+tab3['days'] = [' / '.join(a) for a in ldays]
+
+
+tab3['First author', 'LastName', 'First Name', 'Last Name', 'Institution', 'affil1', 'Tran#', 'Email Address'].write('reglist.csv', format='../data/ascii.csv')
