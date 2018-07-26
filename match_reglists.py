@@ -7,7 +7,7 @@ from astropy.table import join
 from pagepy.abstracts import read_abstracts_table
 
 ### Step 0 - Check the abstract list ###
-abstr = read_abstracts_table('../data/abstr0718.csv', autoacceptposters=False)
+abstr = read_abstracts_table('../data/abstr0725.csv', autoacceptposters=False)
 abstr['Email Address'] = [s.lower() for s in abstr['Email Address']]
 ar, counts = np.unique(abstr['Email Address'], return_counts=True)
 print('The following email addresses are associated with more than one abstract.')
@@ -21,7 +21,7 @@ print(ar[counts > 1])
 # - remove cancelled transactions
 # - normalize name field in caps (some people use ALL CAPS NAMES)
 # - remove title
-jenine = Table.read('../data/jenine0718.csv', format='ascii')
+jenine = Table.read('../data/jenine0725.csv', format='ascii')
 # Remove rows at the end that don't have names in them
 jenine = jenine[~jenine['Last Name'].mask]
 # remove last row where headers are repeated
@@ -248,7 +248,7 @@ print('Number of posters from registered participants: {}'.format((tab3['type'] 
 abstrregistered = abstrshort[np.isin(abstrshort['mergeid'], tab3['mergeid'][~tab3['mergeid'].mask])]
 
 # Write out a table that allows me to find which authors are registered
-abstrregistered[['Email Address']].write('../data/abstr0710_reg.csv', format='ascii.csv')
+abstrregistered[['Email Address']].write('../data/abstr0725_reg.csv', format='ascii.csv')
 
 ### Read in hand edited table of participants
 useabs = Table.read('../data/abstr0718_reg.csv', format='ascii.csv')
