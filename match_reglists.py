@@ -7,7 +7,7 @@ from astropy.table import join
 from pagepy.abstracts import read_abstracts_table
 
 ### Step 0 - Check the abstract list ###
-abstr = read_abstracts_table('../data/abstr0725.csv', autoacceptposters=False)
+abstr = read_abstracts_table('../data/abstr0727.csv', autoacceptposters=False)
 abstr['Email Address'] = [s.lower() for s in abstr['Email Address']]
 ar, counts = np.unique(abstr['Email Address'], return_counts=True)
 print('The following email addresses are associated with more than one abstract.')
@@ -18,10 +18,10 @@ print('The following first authors submitted more than one abstract.')
 print(ar[counts > 1])
 
 ### Step 1: Clean and check Jenine's file (i.e. remove canceled transactions etc.) ###
-# - remove cancelled transactions
+# - remove cancelled transaction
 # - normalize name field in caps (some people use ALL CAPS NAMES)
 # - remove title
-jenine = Table.read('../data/jenine0725.csv', format='ascii')
+jenine = Table.read('../data/jenine0727.csv', format='ascii')
 # Remove rows at the end that don't have names in them
 jenine = jenine[~jenine['Last Name'].mask]
 # remove last row where headers are repeated
@@ -353,3 +353,140 @@ tab3['days'] = [' / '.join(a) for a in ldays]
 
 
 tab3['First author', 'LastName', 'First Name', 'Last Name', 'Institution', 'affil1', 'Tran#', 'Email Address'].write('reglist.csv', format='../data/ascii.csv')
+
+
+full = Table.read('../data/Coolstarsfull_shifted.csv', format='ascii.csv')
+full.rename_column('col43', 'Tran#')
+with open('../data/Coolstarsfull_shifted.csv') as f:
+    fulllines = [line for line in f.readlines()]
+
+full['text'] = fulllines
+
+for col in ['One Day Conference: Jul. 30th, 2018',
+ 'One Day Conference: Jul. 31st, 2018',
+ 'One Day Conference: Aug 1st, 2018',
+ 'One Day Conference: Aug 2nd, 2018',
+ 'One Day Conference: Aug 3rd, 2018']:
+    for row in jenine:
+        if not row[col] is np.ma.masked and row['Tran#'] is not np.ma.masked:
+            indrow = row['Tran#'] == full['Tran#']
+            if indrow.sum() == 0:
+                print('full list has no tran:',  row['Tran#'])
+            else:
+                rowfull = full[row['Tran#'] == full['Tran#']]
+                if not col in rowfull['text'][0]:
+                    print(col, row['First Name'], row['Last Name'], row['Tran#'])
+
+full.rename_column('col15', 'Printed Booklet_full')
+
+from astropy.table import join
+
+tabbook = join(jenine, full, keys='Tran#')
+
+for row in jenine:
+    indrow = row['Tran#'] == full['Tran#']
+    if indrow.sum() == 0:
+        print('full list has no tran:',  row['Tran#'])
+    else:
+        if row['Printed Booklet'] != full['Printed Booklet']
+
+
+bu = Table.read('../data/BUdorms.csv', format='ascii.csv')
+bu = bu[:-2]
+bu['first name'] = [n.lower() for n in bu['First Name']]
+bu['last name'] = [n.lower() for n in bu['Last Name']]
+bu.rename_column('Booking Ref #', 'BU dorm #')
+bu = bu['first name', 'last name', 'BU dorm #']
+jenine['first name'] = [n.lower() for n in jenine['First Name']]
+jenine['last name'] = [n.lower() for n in jenine['Last Name']]
+jenine['order'] = np.arange(len(jenine))
+
+mtab = join(jenine, bu, join_type='left')
+
+ind = ~np.isin(bu['BU dorm #'], mtab['BU dorm #'])
+
+jenine['BUdorm'] = 0
+
+
+jenine = Table.read('../data/jenine0727.csv', format='ascii')
+# Remove rows at the end that don't have names in them
+jenine = jenine[~jenine['Last Name'].mask]
+# remove last row where headers are repeated
+#jenine = jenine[:-1]
+indcancel = np.isin(jenine['Tran#'], [8448, 8466, 8754])
+tab3 = tab3[~indcancel]
+
+for col in ['Printed Booklet', 'Meal Choice', 'DIETARY Restriction', 'PrintComment']:
+    tab3[col].fill('')
+
+for row in tab3:
+    dorm = 'y' if row['BU dorm'] != '' else ''
+    extrarec = 'y' if row['Extra Reception Ticket'] != '' else ''
+    if (row['waiver'] == 'aid') or (row['Registration Type'] is np.ma.masked):
+        ban = 'NOT PAID'
+    elif 'reception and ban' in row['Registration Type']:
+        if row['Meal Choice'] is np.ma.masked:
+            ban = 'Select meat / fish / veg'
+        else:
+            ban = row['Meal Choice']
+    else:
+        ban = 'Banquet not included'
+    if row['Extra Banquet Ticket'] is not np.ma.masked:
+        extraban = 'Select meat / fish / veg'
+    else:
+        extraban = ''
+    excur = ''
+    for col in [ 'Brewery Tour',
+ 'Extra Brewery Tickets',
+ 'Freedom Trail Walking Tour',
+ 'Kayak Tour Early Afternoon',
+ 'Kayak Tour Late Afternoon',
+ 'Extra Kayak Late Afternoon',
+ 'Fenway Park',
+ 'Duck Tour',
+ 'Extra Duck Tour Tickets']:
+        if (row[col] is not np.ma.masked) and (row[col][0] is not np.ma.masked):
+            excur += row[col][0]
+
+    c.execute('UPDATE badges SET booklet=?, banquet=?, extrabanquet=?, diet=?, comment=?, budorm=?, extrarec=? WHERE regid=?',
+              ('' if row['Printed Booklet'] is np.ma.masked else row['Printed Booklet'],
+               ban,
+               extraban,
+               '' if row['DIETARY Restriction'] is np.ma.masked else row['DIETARY Restriction'],
+               '' if row['PrintComment'] is np.ma.masked else row['PrintComment'] , dorm,extrarec, int(row['Tran#_1'])))
+
+
+
+regi    if title == 'LOC':
+        color = 'ForestGreen'
+    elif title == 'SOC':
+        color = 'blue'
+    elif title == "Press":
+        color = 'red'
+    elif title == "Industry Panel":
+        color = 'BurntOrange'
+    else:
+        color = 'black'
+
+def make_one_badge(regid):
+    c.execute('SELECT pronoun, name, affil, image1, image2, email, title, booklet, extrarec, banquet, extrabanquet, excursion, diet, comment, budorm FROM badges WHERE regid=?', [str(regid)])
+    fetch = c.fetchone()
+    data = {}
+    for i, j in zip(['pronoun', 'name', 'inst', 'image1', 'image2', 'email', 'typetext', 'booklet', 'extrarec', 'banquet', 'extrabanquet', 'excursion', 'diet', 'comment', 'budorm'], fetch):
+        data[i] = j
+    print('Preparing badge for: {}'.format(data['name']))
+    title = data['typetext']
+    if title == 'LOC':
+        color = 'ForestGreen'
+    elif title == 'SOC':
+        color = 'blue'
+    elif title == "Press":
+        color = 'red'
+    elif title == "Industry Panel":
+        color = 'BurntOrange'
+    else:
+        color = 'black'
+    data['typecolor'] = color
+    data['regid'] = regid
+
+    badge_deamon.compile_pdf(regid, data)
