@@ -9,15 +9,32 @@
     <div class="container clearfix mt-100 mb-20">
          {% include "templates/globalmessage.html" ignore missing %}
 
-      <h2><span>Registration</span></h2>
-      <div class="c12 row">
-	<p>We have reached 500 participants. Registration for the main conference is closed.
-	<strong>The following events require a separate registration and still have open space:</strong></p>
-	<ul class="listing">
-	  <li>July 30: <a href="http://www.chara.gsu.edu/workshops/coolstars-2018">Meet the CHARA Array</a></li>
-	  <li>Aug 4: <a href="registration.html#hackday">Hack day</a></li>
-	</ul>
-    </div>
+Information that was relevant during the conference (e.g. poster dimensions,
+	 talk instructions) has been moved to the bottom of this page.
+
+<h2><span id="Proceedings">Proceedings</span></h2>
+<div class="c12 row">
+
+<p><strong>Please submit proceedings until October 15th 2018.</strong></p>
+
+<p><a href="https://zenodo.org/communities/cs20/">Proceedings for Cool Stars 20</a> will be entirely electronic. Submission will be handled using <a href="https://zenodo.org/">Zenodo</a>, an EU funded data and project repository, and then indexed on the <a href="https://ui.adsabs.harvard.edu/">ADS</a>. All submissions are assigned a Digital Object Identifier (DOI) number through Zenodo, <a href="http://help.zenodo.org/features/">making contributions citeable</a>, before indexing to <a href="https://ui.adsabs.harvard.edu/">ADS</a> to make contributions discoverable. Submission to the <a href="https://arxiv.org/submit">arXiv</a> in parallel with submission to the conference proceedings is encouraged. Contributions are accepted from invited plenary session reviews, contributed plenary session talks and splinter session talks, and contributed posters. In addition, collective contributions from (parallel) splinter sessions and contributions from the CS20 hack day are welcome. If you would like to submit a typical conference proceeding,  there are no formal page limits. However for some  guidance, we recommend you limit yourself to 4-8 pages for contributed talks and 10-15 pages for invited talks. Those wishing to submit a written conference proceeding are encouraged to format the document using the <a href="docs/proceedings_template.tar.gz">Cool Stars 20 LaTeX document class</a>.  All such submissions should be made as PDFs and will be reviewed for content by the SOC and we may suggest edits.</p>
+
+<p>Submission of presentation slides from speakers and full posters are also encouraged. PDF versions of these documents are the preferred format for Zenodo contributions to permit the documents to be previewed in a web browser. For maximum impact, you can submit both, a written contribution and your presentation slides and/or a poster to provide greater context. Contributions will be checked for the proper metadata.</p>
+
+<p>Check out our <a href="proceedings.html">detailed instructions</a>.</p>
+</div>
+
+
+<h2><span id="attendees">List of Attendees</span></h2>
+       <div class="c12 row">
+	 <ul class="listing">
+	   {% for m in attendees %}
+	   <li>{{m['name']}} - {{m['affil']}}</li>
+	   {% endfor %}
+	 </ul>
+       </div>
+
+
 
 <h2><span id="Talks">Talks</span></h2>
 <div class="c12 row">
@@ -30,17 +47,6 @@
   </p>  
 </div>
 
-<h2><span id="Proceedings">Proceedings</span></h2>
-<div class="c12 row">
-
-<p><a href="https://zenodo.org/communities/cs20/">Proceedings for Cool Stars 20</a> will be entirely electronic. Submission will be handled using <a href="https://zenodo.org/">Zenodo</a>, an EU funded data and project repository, and then indexed on the <a href="https://ui.adsabs.harvard.edu/">ADS</a>. All submissions are assigned a Digital Object Identifier (DOI) number through Zenodo, <a href="http://help.zenodo.org/features/">making contributions citeable</a>, before indexing to <a href="https://ui.adsabs.harvard.edu/">ADS</a> to make contributions discoverable. Submission to the <a href="https://arxiv.org/submit">arXiv</a> in parallel with submission to the conference proceedings is encouraged. Contributions are accepted from invited plenary session reviews, contributed plenary session talks and splinter session talks, and contributed posters. In addition, collective contributions from (parallel) splinter sessions and contributions from the CS20 hack day are welcome. If you would like to submit a typical conference proceeding,  there are no formal page limits. However for some  guidance, we recommend you limit yourself to 4-8 pages for contributed talks and 10-15 pages for invited talks. Those wishing to submit a written conference proceeding are encouraged to format the document using the <a href="docs/proceedings_template.tar.gz">Cool Stars 20 LaTeX document class</a>.  All such submissions should be made as PDFs and will be reviewed for content by the SOC and we may suggest edits.</p>
-
-<p>Submission of presentation slides from speakers and full posters are also encouraged. PDF versions of these documents are the preferred format for Zenodo contributions to permit the documents to be previewed in a web browser. For maximum impact, you can submit both, a written contribution and your presentation slides and/or a poster to provide greater context. Contributions will be checked for the proper metadata.</p>
-
-<p>Check out our <a href="proceedings.html">detailed instructions</a>.</p>
-
-  
-</div>
 
       <h2><span id="registration">Registration for conference</span></h2>
       <div class="c12 row">

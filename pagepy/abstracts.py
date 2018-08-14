@@ -78,6 +78,16 @@ def loctime(row):
     else:
         return ''
 
+
+def links(row):
+    out = ''
+    if row['youtubelink'] != '':
+        out += ' | <a href="{}">video (youtube)</a>'.format(row['youtubelink'])
+    if row['pdflink'] != '':
+        out += ' | <a href="{}">slides (pdf)</a>'.format(row['pdflink'])
+    return out
+
+
 # missing in list below: mark invited talks
 def write_json_abstracts(abstr):
     data = {'data': []}
@@ -90,7 +100,7 @@ def write_json_abstracts(abstr):
                              'title': row['Title'],
                              'authoremail': "<a href='mailto:{0}'>{0}</a>".format(row['Email Address']) if row['Publish first author contact information?'] else '--',
                              'link': '<a href="{0}">{0}</a>'.format(row['Link to electronic material']) if row['Link to electronic material'] else '--',
-                             'loctime': loctime(row),
+                             'loctime': loctime(row) + links(row),
                              'index': row['index'],
                              })
     with open('data/abstracts.json', 'w') as fp:
