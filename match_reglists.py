@@ -489,4 +489,4 @@ def make_one_badge(regid):
     data['typecolor'] = color
     data['regid'] = regid
 
-    badge_deamon.compile_pdf(regid, data)
+    badge_daemon.compile_pdf(regid, data)
