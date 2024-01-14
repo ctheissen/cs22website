@@ -4,15 +4,15 @@ import numpy as np
 import csv
 from astropy.table import Table, Column, join
 
-dates = {'': [2018, 8, 28],  # Posters don't have a date. They should be displayed last.
-         'TBA': [2018, 7, 28],
-         'Sun': [2018, 7, 29],
-         'Mon': [2018, 7, 30],
-         'Tue': [2018, 7, 31],
-         'Wed': [2018, 8, 1],
-         'Thu': [2018, 8, 2],
-         'Fri': [2018, 8, 3],
-         'Sat': [2018, 8, 4]}
+dates = {'': [2024, 8, 28],  # Posters don't have a date. They should be displayed last.
+         'TBA': [2024, 7, 28],
+         'Sun': [2024, 7, 29],
+         'Mon': [2024, 7, 30],
+         'Tue': [2024, 7, 31],
+         'Wed': [2024, 8, 1],
+         'Thu': [2024, 8, 2],
+         'Fri': [2024, 8, 3],
+         'Sat': [2024, 8, 4]}
 '''Mapping between 3-character day code and date'''
 
 
@@ -117,11 +117,11 @@ def process_google_form_value(tab, **kwargs):
 
     This function add new colums to a table ``tab``.
     '''
-    tab['authorlist'] = [r.split(';') for r in tab['Authors']]
+    tab['authorlist']   = [r.split(';') for r in tab['Authors']]
     tab['First author'] = [r[0].split('(')[0].strip() for r in tab['authorlist']]
     tab['affiliations'] = [r.split(';') for r in tab['Affiliations']]
     tab['affiliations'] = [combine_affils(r) for r in tab['affiliations']]
-    tab['binary_time'] = [parse_day_time(r['day'], r['time']) for r in tab]
+    #tab['binary_time'] = [parse_day_time(r['day'], r['time']) for r in tab]
 
     team = Column(length=len(tab), dtype='<U140')
     for i, f in enumerate(tab['First author']):

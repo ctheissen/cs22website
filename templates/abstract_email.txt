@@ -3,7 +3,7 @@ Dear {{dat['First author']}},
 we have processed your abstract to generate an html form for our website and a
 pdf file to be used in the printed abstract booklet.  Please check that
 everything looks right in both formats. You might have to save the html to a
-file and open it file in a webbrowser as some email programs don't render the
+file and open it file in a web browser as some email programs don't render the
 formulas correctly.
 
 Note that some symbols e.g. "%" work just fine in html, but might cause
@@ -26,9 +26,9 @@ Common reasons why your abstract might not format correctly:
   automatically).
 
 If you need assistance or notice a problem with this message, please
-contact the Moritz Günther <hgunther@mit.edu>.
+contact the Christopher Theissen <ctheissen@ucsd.edu>.
 
-Looking forward to seeing you at CS20!
+Looking forward to seeing you at CS22!
 
-Yours,
-   Moritz
+Best,
+   Chris
