@@ -24,7 +24,9 @@ from email.mime.multipart import MIMEMultipart
 import mimetypes
 import base64
 
-sys.path.append('../pagepy')
+from os.path import expanduser
+home = expanduser("~")
+sys.path.append(home + '/repos/cs22website/pagepy')
 from abstracts import process_google_form_value
 
 
@@ -82,7 +84,7 @@ def set_timestamp(sheet, col, row, status=''):
 def send_conf_email(dat):
     if len(dat) != 1:
         raise ValueError('Table with data for email needs to have exactly one row.')
-    with open('../../../gmail.txt') as f:
+    with open(home + '/gmail.txt') as f:
         password = f.read()
     password = password[:-1]
     process_google_form_value(dat, autoacceptposters=True)
@@ -114,19 +116,19 @@ def send_conf_email(dat):
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists("../../../token.json"):
-        creds = Credentials.from_authorized_user_file("../../../token.json", SCOPES)
+    if os.path.exists(home + "/token.json"):
+        creds = Credentials.from_authorized_user_file(home + "/token.json", SCOPES)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-              "../../../credentials.json", SCOPES
+              home + "/credentials.json", SCOPES
             )
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open("../../../token.json", "w") as token:
+        with open(home + "/token.json", "w") as token:
             token.write(creds.to_json())
 
     service = build("gmail", "v1", credentials=creds)
@@ -137,7 +139,7 @@ def send_conf_email(dat):
                                              msg['To']))
 
 
-env = Environment(loader=FileSystemLoader(['../templates']),
+env = Environment(loader=FileSystemLoader([home+'/repos/cs22website/templates']),
                   autoescape=select_autoescape(['html']))
 
 parse_sheet_timestamp = re.compile("(?P<month>[0-9]+)/(?P<day>[0-9]+)/(?P<year>[0-9]+) (?P<hour>[0-9]+):(?P<minute>[0-9]+):(?P<second>[0-9]+)")
