@@ -169,9 +169,9 @@ for i, ts in enumerate(g_sheet['Timestamp']):
                 #sys.exit()
                 send_conf_email(g_sheet[[i]])
                 set_timestamp(sheet, ind_conf, i + 1)
-                sys.exit()
+                #sys.exit()
         else:
-            sys.exit()
+            #sys.exit()
             matchconf = parse_sheet_timestamp.match(g_sheet['confemail'][i])
             if matchconf is None:
                 warn('Cannot parse time for confemail: {}'.format(g_sheet['confemail'][i]))
