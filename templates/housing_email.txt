@@ -1,0 +1,22 @@
+Dear {{dat['First name']}},
+
+This email includes details about your Cool Stars 22 on-campus housing. Please read it carefully.
+
+The key and housing logistics can be picked up at our registration desk from an LOC member. The registration desk is located inside the conference venue (https://maps.app.goo.gl/n3sntqAEeASRwvm38).
+
+
+Your current housing assignment is listed below.
+
+Room Type: {{dat['Room']}}
+Check-in date: {{dat['Check-in date']}}
+Check-out date: {{dat['Check-out date']}}
+Roommate(s) (if any): {{dat['Roommate']}}
+
+
+If you need assistance or notice a problem with this message, please
+contact the the Cool Stars 22 LOC <coolstars22sd@gmail.com>.
+
+Looking forward to seeing you at CS22!
+
+Best,
+   Cool Stars 22 LOC
