@@ -59,7 +59,7 @@ def set_timestamp(sheet, col, row, status=''):
         A prefix to the time stamp. This can be used to
         mark a cell that is currently processed.
     '''
-    val = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+    val = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     sheet.loc[row-1, 'confemail'] = val
     #sheet.update_cell(row + 1, col + 1, status + val)
 
@@ -183,4 +183,5 @@ for i, ts in enumerate(g_sheet['Timestamp']):
                     send_conf_email(g_sheet[[i]])
                     set_timestamp(sheet, ind_conf, i + 1)
 
+df.to_excel(home + '/Downloads/Cool Stars 22 Housing Tracker_Upload Info_test2.xlsx')
 print('Done processing')
